@@ -115,12 +115,12 @@ export const vendors = pgTable("vendors", {
 
 // Using existing gallery_images table
 export const galleryImages = pgTable("gallery_images", {
-    id: text("id").primaryKey(),
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
     url: text("url"),
     category: text("category"),
     credit: text("credit"),
     takenAt: timestamp("taken_at"),
-    published: boolean("published"),
-    createdAt: timestamp("created_at"),
-    updatedAt: timestamp("updated_at"),
+    published: boolean("published").default(false),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
 });
