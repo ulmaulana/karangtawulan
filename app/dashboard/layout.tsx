@@ -1,6 +1,7 @@
 "use client";
 
 import { AdminSidebar } from "@/components/admin-sidebar";
+import { Toaster } from "@/components/ui/toaster";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -44,6 +45,7 @@ export default function DashboardLayout({
           {children}
         </div>
       </main>
+      <Toaster />
     </div>
   );
 }
