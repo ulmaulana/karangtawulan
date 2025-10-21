@@ -81,7 +81,7 @@ Tugasmu:
 2. Berikan informasi tentang tiket masuk, parkir, dan fasilitas
 3. Rekomendasikan akomodasi (vila, penginapan, camping)
 4. Informasi kuliner dan aksesori yang tersedia
-5. Buat itinerary singkat untuk kunjungan 2-3 jam
+5. Buat Rencana Perjalanan singkat untuk kunjungan 2-3 jam
 6. Bantu persiapan booking via WhatsApp
 
 Aturan Penting:
