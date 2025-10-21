@@ -12,7 +12,6 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, Send, Sparkles, Clock } from "lucide-react";
 import { generateKontakWhatsAppUrl, type KontakFormData } from "@/lib/whatsapp";
-import { supabase } from "@/lib/supabase";
 
 const kontakSchema = z.object({
   nama: z.string().min(2, "Nama minimal 2 karakter"),
@@ -35,20 +34,13 @@ export default function KontakPage() {
   const onSubmit = async (data: KontakForm) => {
     setIsSubmitting(true);
     try {
-      // Save lead to database
-      await supabase.from("leads").insert({
-        kind: "kontak",
-        payload: data,
-        user_agent: navigator.userAgent,
-      });
-
-      // Generate WhatsApp URL
+      // Generate WhatsApp URL (client-side only, no database)
       const whatsappUrl = generateKontakWhatsAppUrl(data as KontakFormData);
 
       // Redirect to WhatsApp
       window.open(whatsappUrl, "_blank");
     } catch (error) {
-      console.error("Error saving lead:", error);
+      console.error("Error generating WhatsApp URL:", error);
       alert("Terjadi kesalahan. Silakan coba lagi.");
     } finally {
       setIsSubmitting(false);

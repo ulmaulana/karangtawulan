@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { BookingForm } from "@/components/booking-form";
 import { supabase, type Package } from "@/lib/supabase";
 import { formatRupiah } from "@/lib/whatsapp";
-import { Check, Users, Clock, Calendar, Sparkles, ArrowRight } from "lucide-react";
+import { Check, Users, Clock, Calendar, Sparkles, ArrowRight, Package as PackageIcon } from "lucide-react";
 
 export default function PaketPage() {
   const [packages, setPackages] = useState<Package[]>([]);
@@ -59,43 +59,52 @@ export default function PaketPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header - Split Layout */}
-      <section className="relative overflow-hidden">
-        <div className="container mx-auto px-4 py-24 md:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <Badge className="mb-6 bg-sea-ocean/10 text-sea-ocean border-0">
-                <Sparkles className="w-3 h-3 mr-1" />
-                Paket Pilihan Terbaik
-              </Badge>
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight">
-                Paket<span className="block text-sea-ocean">Wisata</span>
-              </h1>
-              <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                Pilih paket yang sesuai dengan kebutuhan Anda. Semua paket sudah termasuk fasilitas lengkap dan guide berpengalaman.
-              </p>
-              <div className="flex gap-4">
-                <Button asChild size="lg" className="bg-sea-ocean hover:bg-sea-teal">
-                  <Link href="#packages">Lihat Paket</Link>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="border-sea-ocean text-sea-ocean hover:bg-sea-ocean hover:text-white">
-                  <Link href="#booking">Booking Sekarang</Link>
-                </Button>
+      {/* Header - Minimal Modern */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-sea-foam/20 to-white">
+        <div className="container mx-auto px-4 py-20 md:py-28">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Label */}
+            <p className="text-sm font-semibold text-sea-teal mb-4 tracking-wider uppercase">
+              Tour Packages
+            </p>
+            
+            {/* Heading */}
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-tight">
+              Paket Wisata Karangtawulan
+            </h1>
+            
+            {/* Description */}
+            <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-2xl mx-auto">
+              Berbagai pilihan paket dengan harga terjangkau. Fasilitas lengkap, guide berpengalaman, dokumentasi profesional.
+            </p>
+
+            {/* Quick Info Stats */}
+            <div className="flex flex-wrap justify-center gap-6 mb-10">
+              <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100">
+                <Users className="h-5 w-5 text-sea-ocean" />
+                <span className="text-sm font-medium text-gray-700">Rombongan 1-50 orang</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100">
+                <Clock className="h-5 w-5 text-sea-teal" />
+                <span className="text-sm font-medium text-gray-700">Durasi 3-12 jam</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100">
+                <PackageIcon className="h-5 w-5 text-sea-ocean" />
+                <span className="text-sm font-medium text-gray-700">All-inclusive</span>
               </div>
             </div>
-            <div className="hidden lg:block">
-              <div className="grid grid-cols-2 gap-4">
-                <Card className="p-6 rounded-3xl border-0 bg-sea-foam/30">
-                  <Users className="h-10 w-10 text-sea-ocean mb-3" />
-                  <div className="text-2xl font-bold text-sea-ocean mb-1">10-50</div>
-                  <div className="text-sm text-gray-600">Kapasitas rombongan</div>
-                </Card>
-                <Card className="p-6 rounded-3xl border-0 bg-sea-ocean/5 mt-8">
-                  <Clock className="h-10 w-10 text-sea-teal mb-3" />
-                  <div className="text-2xl font-bold text-sea-teal mb-1">3-12 Jam</div>
-                  <div className="text-sm text-gray-600">Durasi paket</div>
-                </Card>
-              </div>
+            
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button asChild size="lg" className="bg-sea-ocean hover:bg-sea-teal rounded-xl h-12">
+                <Link href="#packages" className="flex items-center gap-2">
+                  Lihat Paket
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="border-sea-ocean text-sea-ocean hover:bg-sea-ocean hover:text-white rounded-xl h-12">
+                <Link href="#booking">Booking Sekarang</Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -112,91 +121,90 @@ export default function PaketPage() {
           </div>
         ) : (
           <>
-            {/* Package Comparison - Modern Cards */}
+            {/* Package Comparison - Minimal Modern */}
             <section className="mb-20">
               <div className="text-center mb-16">
-                <Badge className="mb-6 bg-sea-teal/10 text-sea-teal border-0">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Paket Pilihan
-                </Badge>
-                <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Pilih Paket Anda</h2>
-                <p className="text-xl text-gray-600 max-w-2xl mx-auto">Harga terjangkau dengan fasilitas lengkap untuk pengalaman tak terlupakan</p>
+                <p className="text-sm font-medium text-sea-teal mb-4 tracking-wider uppercase">Paket Wisata Pilihan</p>
+                <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Pilih Paket Wisata Anda</h2>
+                <p className="text-lg text-gray-500 max-w-2xl mx-auto">Harga terjangkau dengan fasilitas lengkap untuk pengalaman tak terlupakan</p>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {packages.map((pkg, index) => (
                   <Card
                     key={pkg.id}
-                    className={`p-8 rounded-3xl transition-all duration-300 hover:-translate-y-2 relative group ${
+                    className={`relative group p-6 rounded-2xl transition-all duration-500 hover:shadow-2xl flex flex-col ${
                       pkg.harga === 190000
-                        ? "border-0 shadow-2xl bg-gradient-to-br from-sea-ocean/5 to-sea-teal/5 ring-2 ring-sea-teal lg:scale-105"
-                        : "border-0 shadow-lg bg-white hover:shadow-2xl hover:ring-2 hover:ring-sea-foam/50"
+                        ? "border-2 border-sea-teal bg-white shadow-lg"
+                        : "border border-gray-100 bg-white hover:border-sea-ocean/20"
                     }`}
-                    style={{ zIndex: pkg.harga === 190000 ? 10 : 1 }}
                   >
+                    {/* Popular Badge */}
                     {pkg.harga === 190000 && (
-                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                        <Badge className="bg-gradient-to-r from-sea-ocean to-sea-teal text-white border-0 px-6 py-2.5 text-sm font-bold shadow-xl animate-pulse">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <span className="inline-flex items-center gap-1 bg-sea-teal text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg">
                           ⭐ Paling Populer
-                        </Badge>
+                        </span>
                       </div>
                     )}
-                    <div className="text-center mb-8">
-                      <h3 className="text-2xl font-bold mb-6 tracking-tight group-hover:text-sea-ocean transition-colors">{pkg.nama}</h3>
-                      <div className="mb-6 p-6 bg-gradient-to-br from-sea-foam/20 to-transparent rounded-2xl">
-                        <div className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Harga Paket</div>
-                        <div className="text-5xl font-bold bg-gradient-to-r from-sea-ocean to-sea-teal bg-clip-text text-transparent mb-1">
+
+                    {/* Header */}
+                    <div className="mb-4 pb-4 border-b border-gray-100">
+                      <h3 className="text-lg font-semibold mb-3 tracking-tight">{pkg.nama}</h3>
+                      
+                      {/* Price */}
+                      <div className="mb-3">
+                        <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Harga Paket</p>
+                        <p className="text-2xl font-bold tracking-tight">
                           {formatRupiah(pkg.harga)}
-                        </div>
-                        <div className="text-sm text-gray-500">per rombongan</div>
+                        </p>
+                        <p className="text-xs text-gray-500 mt-0.5">per rombongan</p>
                       </div>
-                      <div className="flex justify-center gap-4 text-sm">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-sea-ocean/5 rounded-full">
-                          <Users className="h-4 w-4 text-sea-ocean" />
-                          <span className="font-medium text-gray-700">{pkg.pax_min}-{pkg.pax_max} orang</span>
-                        </div>
-                        <div className="flex items-center gap-2 px-4 py-2 bg-sea-teal/5 rounded-full">
-                          <Clock className="h-4 w-4 text-sea-teal" />
-                          <span className="font-medium text-gray-700">{pkg.durasi_jam} jam</span>
-                        </div>
+
+                      {/* Info Pills */}
+                      <div className="flex gap-2 text-xs">
+                        <span className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 rounded-full text-gray-600">
+                          <Users className="h-3 w-3" />
+                          {pkg.pax_min}-{pkg.pax_max}
+                        </span>
+                        <span className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 rounded-full text-gray-600">
+                          <Clock className="h-3 w-3" />
+                          {pkg.durasi_jam} jam
+                        </span>
                       </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-sea-foam/30 to-transparent rounded-2xl p-6 mb-6 border border-sea-foam/30">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 rounded-lg bg-sea-ocean/10 flex items-center justify-center">
-                          <Check className="h-4 w-4 text-sea-ocean" />
-                        </div>
-                        <div className="text-xs font-bold text-sea-ocean uppercase tracking-wider">Termasuk</div>
-                      </div>
-                      <div className="space-y-2.5">
+                    {/* Facilities - 2 Columns if more than 3 */}
+                    <div className="mb-4 flex-grow">
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Termasuk</p>
+                      <ul className={`gap-x-3 gap-y-1.5 ${pkg.facilities.length > 3 ? 'grid grid-cols-2' : 'flex flex-col space-y-1.5'}`}>
                         {pkg.facilities.map((facility, index) => (
-                          <div key={index} className="flex items-start gap-3 group/item">
-                            <div className="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-br from-sea-teal to-sea-ocean flex items-center justify-center mt-0.5">
-                              <Check className="h-3 w-3 text-white stroke-[3]" />
-                            </div>
-                            <span className="text-sm leading-relaxed text-gray-700 group-hover/item:text-sea-ocean transition-colors">{facility}</span>
-                          </div>
+                          <li key={index} className="flex items-start gap-1.5 text-xs text-gray-600">
+                            <Check className="h-3.5 w-3.5 text-sea-ocean mt-0.5 flex-shrink-0" />
+                            <span className="leading-tight">{facility}</span>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
 
+                    {/* Notes */}
                     {pkg.notes && (
-                      <div className="mt-4 p-4 bg-gradient-to-r from-sea-sand/20 to-transparent rounded-xl border-l-4 border-sea-coral">
-                        <p className="text-sm text-gray-700 leading-relaxed italic">{pkg.notes}</p>
+                      <div className="mb-4 p-2.5 bg-sea-sand/10 rounded-lg border-l-2 border-sea-coral">
+                        <p className="text-xs text-gray-600 leading-snug">{pkg.notes}</p>
                       </div>
                     )}
-                    
+
+                    {/* CTA Button - Always at bottom */}
                     <Button 
                       asChild 
-                      className={`w-full mt-6 h-14 text-base font-semibold group/btn transition-all duration-300 ${
+                      className={`w-full h-10 text-sm font-medium rounded-xl transition-all mt-auto ${
                         pkg.harga === 190000 
-                          ? "bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-2xl hover:scale-105"
-                          : "bg-sea-ocean hover:bg-sea-teal hover:shadow-xl"
+                          ? "bg-sea-teal hover:bg-sea-ocean"
+                          : "bg-sea-ocean hover:bg-sea-teal"
                       }`}
                     >
-                      <Link href="#booking" className="flex items-center justify-center">
+                      <Link href="#booking" className="flex items-center justify-center gap-2">
                         Booking Sekarang
-                        <ArrowRight className="ml-2 h-5 w-5 group-hover/btn:translate-x-1 transition-transform" />
+                        <ArrowRight className="h-4 w-4" />
                       </Link>
                     </Button>
                   </Card>
@@ -222,7 +230,7 @@ export default function PaketPage() {
                       <span className="text-sea-ocean font-bold text-xs">✓</span>
                     </span>
                     <span>
-                      <strong>DP 50%</strong> - Booking paket memerlukan down
+                      <strong>DP 50%</strong> - Booking paket wisata memerlukan down
                       payment 50% dari total harga
                     </span>
                   </li>
