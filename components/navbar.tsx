@@ -16,7 +16,7 @@ export function Navbar() {
 
   const navItems = [
     { href: "/", label: "Beranda" },
-    { href: "/paket", label: "Paket" },
+    { href: "/paket", label: "Paket Wisata" },
     { href: "/akomodasi", label: "Akomodasi" },
     { href: "/jelajah", label: "Jelajah" },
     { href: "/galeri", label: "Galeri" },

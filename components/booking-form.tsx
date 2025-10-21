@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -18,7 +18,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { generateBookingWhatsAppUrl, type BookingFormData } from "@/lib/whatsapp";
-import { supabase } from "@/lib/supabase";
 import { Calendar, Clock, Users, MessageCircle, User, Phone, Package, Send, Sparkles } from "lucide-react";
 
 const bookingSchema = z.object({
@@ -33,8 +32,18 @@ const bookingSchema = z.object({
 
 type BookingForm = z.infer<typeof bookingSchema>;
 
+interface Package {
+  id: string;
+  nama: string;
+  harga: number;
+  published: boolean;
+}
+
 export function BookingForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [packages, setPackages] = useState<Package[]>([]);
+  const [loadingPackages, setLoadingPackages] = useState(true);
+  
   const {
     register,
     handleSubmit,
@@ -45,23 +54,39 @@ export function BookingForm() {
     resolver: zodResolver(bookingSchema),
   });
 
+  // Fetch packages from database
+  useEffect(() => {
+    async function fetchPackages() {
+      try {
+        const response = await fetch('/api/packages');
+        if (response.ok) {
+          const data = await response.json();
+          // Filter only published packages and sort by price
+          const publishedPackages = data
+            .filter((pkg: Package) => pkg.published)
+            .sort((a: Package, b: Package) => a.harga - b.harga);
+          setPackages(publishedPackages);
+        }
+      } catch (error) {
+        console.error('Error fetching packages:', error);
+      } finally {
+        setLoadingPackages(false);
+      }
+    }
+
+    fetchPackages();
+  }, []);
+
   const onSubmit = async (data: BookingForm) => {
     setIsSubmitting(true);
     try {
-      // Save lead to database
-      await supabase.from("leads").insert({
-        kind: "booking",
-        payload: data,
-        user_agent: navigator.userAgent,
-      });
-
-      // Generate WhatsApp URL
+      // Generate WhatsApp URL (client-side only, no database)
       const whatsappUrl = generateBookingWhatsAppUrl(data as BookingFormData);
 
       // Redirect to WhatsApp
       window.open(whatsappUrl, "_blank");
     } catch (error) {
-      console.error("Error saving lead:", error);
+      console.error("Error generating WhatsApp URL:", error);
       alert("Terjadi kesalahan. Silakan coba lagi.");
     } finally {
       setIsSubmitting(false);
@@ -86,14 +111,22 @@ export function BookingForm() {
             <Package className="h-4 w-4 text-sea-ocean" />
             Paket Wisata *
           </Label>
-          <Select onValueChange={(value) => setValue("paket", value)}>
+          <Select onValueChange={(value) => setValue("paket", value)} disabled={loadingPackages}>
             <SelectTrigger>
-              <SelectValue placeholder="Pilih paket" />
+              <SelectValue placeholder={loadingPackages ? "Memuat paket..." : "Pilih paket wisata"} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Paket 100K">Paket 100K</SelectItem>
-              <SelectItem value="Paket 190K">Paket 190K</SelectItem>
-              <SelectItem value="Paket 250K">Paket 250K</SelectItem>
+              {packages.length === 0 && !loadingPackages ? (
+                <SelectItem value="no-packages" disabled>
+                  Belum ada paket tersedia
+                </SelectItem>
+              ) : (
+                packages.map((pkg) => (
+                  <SelectItem key={pkg.id} value={pkg.nama}>
+                    {pkg.nama}
+                  </SelectItem>
+                ))
+              )}
             </SelectContent>
           </Select>
           {errors.paket && (
