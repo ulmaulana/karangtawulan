@@ -58,6 +58,7 @@ export default function GaleriPage() {
   const sunsetImages = images.filter((img) => img.category === "sunset");
   const sunriseImages = images.filter((img) => img.category === "sunrise");
   const activityImages = images.filter((img) => img.category === "aktivitas");
+  const beachImages = images.filter((img) => img.category === "pantai");
 
   const ImageGrid = ({ images }: { images: GalleryImage[] }) => {
     if (images.length === 0) {
@@ -72,32 +73,26 @@ export default function GaleriPage() {
     }
 
     return (
-      <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {images.map((image, index) => (
           <div
             key={image.id}
-            className="group relative overflow-hidden rounded-3xl cursor-pointer bg-gray-100 shadow-lg hover:shadow-2xl transition-all duration-500 break-inside-avoid"
+            className="group relative overflow-hidden rounded-xl cursor-pointer bg-gray-100 border border-gray-200 hover:border-sea-ocean/30 transition-all duration-300 aspect-square"
             onClick={() => setSelectedImage(image)}
-            style={{ 
-              height: `${Math.floor(Math.random() * (450 - 300 + 1)) + 300}px`
-            }}
           >
             {image.url && (
               <img
                 src={image.url}
                 alt={image.category || "Gallery image"}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                <div className="flex items-center gap-2 mb-2">
-                  <ImageIcon className="h-4 w-4" />
-                  <span className="text-sm font-medium capitalize">{image.category}</span>
-                </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                <span className="text-xs font-medium capitalize px-2 py-1 bg-white/20 backdrop-blur-sm rounded">{image.category}</span>
                 {image.credit && (
-                  <p className="text-xs opacity-80">📷 {image.credit}</p>
+                  <p className="text-xs opacity-90 mt-2">📷 {image.credit}</p>
                 )}
               </div>
             </div>
@@ -109,26 +104,24 @@ export default function GaleriPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Header - Minimalist */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-sea-foam/30 to-white">
-        <div className="container mx-auto px-4 py-24 md:py-32">
-          <div className="max-w-3xl mx-auto text-center">
-            <Badge className="mb-6 bg-sea-ocean/10 text-sea-ocean border-0">
-              <Sparkles className="w-3 h-3 mr-1" />
-              Koleksi Foto Terbaik
-            </Badge>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight">
-              Galeri
-              <span className="block text-sea-ocean">Karangtawulan</span>
+      {/* Hero Header - Modern Minimalist */}
+      <section className="border-b border-gray-100">
+        <div className="container mx-auto px-4 py-16 md:py-20">
+          <div className="max-w-4xl">
+            <p className="text-sm font-medium text-sea-ocean mb-3 tracking-wide uppercase">
+              Gallery
+            </p>
+            <h1 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
+              Galeri Karangtawulan
             </h1>
-            <p className="text-xl text-gray-600 leading-relaxed">
+            <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-2xl">
               Saksikan keindahan Pantai Karangtawulan melalui koleksi foto sunset yang memukau, sunrise yang menakjubkan, dan aktivitas seru di pantai.
             </p>
           </div>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-20">
+      <div className="container mx-auto px-4 py-12 md:py-16">
         {loading ? (
           <div className="flex justify-center items-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-sea-ocean" />
@@ -136,31 +129,37 @@ export default function GaleriPage() {
           </div>
         ) : (
           <Tabs defaultValue="all" className="w-full">
-            <div className="flex justify-center mb-16">
-              <TabsList className="inline-flex p-2 bg-sea-foam/30 rounded-full backdrop-blur-sm">
+            <div className="flex justify-start mb-10 overflow-x-auto pb-2">
+              <TabsList className="inline-flex gap-2 bg-transparent p-0">
                 <TabsTrigger 
                   value="all" 
-                  className="rounded-full px-8 py-3 data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-sea-ocean font-medium"
+                  className="rounded-lg px-5 py-2 border border-gray-200 data-[state=active]:bg-sea-ocean data-[state=active]:text-white data-[state=active]:border-sea-ocean text-sm font-medium transition-all"
                 >
-                  Semua ({images.length})
+                  Semua <span className="ml-1.5 text-xs opacity-70">({images.length})</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="sunset"
-                  className="rounded-full px-8 py-3 data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-sea-ocean font-medium"
+                  className="rounded-lg px-5 py-2 border border-gray-200 data-[state=active]:bg-sea-ocean data-[state=active]:text-white data-[state=active]:border-sea-ocean text-sm font-medium transition-all"
                 >
-                  Sunset ({sunsetImages.length})
+                  Sunset <span className="ml-1.5 text-xs opacity-70">({sunsetImages.length})</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="sunrise"
-                  className="rounded-full px-8 py-3 data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-sea-ocean font-medium"
+                  className="rounded-lg px-5 py-2 border border-gray-200 data-[state=active]:bg-sea-ocean data-[state=active]:text-white data-[state=active]:border-sea-ocean text-sm font-medium transition-all"
                 >
-                  Sunrise ({sunriseImages.length})
+                  Sunrise <span className="ml-1.5 text-xs opacity-70">({sunriseImages.length})</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="aktivitas"
-                  className="rounded-full px-8 py-3 data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-sea-ocean font-medium"
+                  className="rounded-lg px-5 py-2 border border-gray-200 data-[state=active]:bg-sea-ocean data-[state=active]:text-white data-[state=active]:border-sea-ocean text-sm font-medium transition-all"
                 >
-                  Aktivitas ({activityImages.length})
+                  Aktivitas <span className="ml-1.5 text-xs opacity-70">({activityImages.length})</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="pantai"
+                  className="rounded-lg px-5 py-2 border border-gray-200 data-[state=active]:bg-sea-ocean data-[state=active]:text-white data-[state=active]:border-sea-ocean text-sm font-medium transition-all"
+                >
+                  Pantai <span className="ml-1.5 text-xs opacity-70">({beachImages.length})</span>
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -179,6 +178,10 @@ export default function GaleriPage() {
 
             <TabsContent value="aktivitas">
               <ImageGrid images={activityImages} />
+            </TabsContent>
+
+            <TabsContent value="pantai">
+              <ImageGrid images={beachImages} />
             </TabsContent>
           </Tabs>
         )}

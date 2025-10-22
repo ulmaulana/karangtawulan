@@ -91,8 +91,16 @@ export default function AkomodasiPage() {
             <p className="text-gray-500">Memuat data akomodasi...</p>
           </div>
         ) : (
-          <Tabs defaultValue="vila" className="w-full">
+          <Tabs defaultValue="semua" className="w-full">
             <TabsList className="inline-flex gap-2 bg-transparent border-b border-gray-200 w-full mb-12 rounded-none p-0">
+              <TabsTrigger 
+                value="semua" 
+                className="rounded-none px-6 py-3 border-b-2 border-transparent data-[state=active]:border-sea-ocean data-[state=active]:text-sea-ocean font-medium text-sm"
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Semua
+                <span className="ml-1.5 text-xs bg-gray-100 px-2 py-0.5 rounded-full">{accommodations.length}</span>
+              </TabsTrigger>
               <TabsTrigger 
                 value="vila" 
                 className="rounded-none px-6 py-3 border-b-2 border-transparent data-[state=active]:border-sea-ocean data-[state=active]:text-sea-ocean font-medium text-sm"
@@ -118,6 +126,80 @@ export default function AkomodasiPage() {
                 <span className="ml-1.5 text-xs bg-gray-100 px-2 py-0.5 rounded-full">{camping.length}</span>
               </TabsTrigger>
             </TabsList>
+
+            {/* Semua */}
+            <TabsContent value="semua">
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold mb-2 tracking-tight">Semua Akomodasi</h2>
+                <p className="text-sm text-gray-500">Pilihan lengkap penginapan di sekitar Pantai Karangtawulan</p>
+              </div>
+              {accommodations.length === 0 ? (
+                <p className="text-center text-gray-500">
+                  Data akomodasi akan segera tersedia.
+                </p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {accommodations.map((acc) => (
+                    <Card key={acc.id} className="overflow-hidden rounded-xl border border-gray-200 hover:border-sea-ocean/30 hover:shadow-lg transition-all duration-200 group bg-white">
+                      {acc.photo_url && (
+                        <div className="h-56 bg-gray-200 overflow-hidden">
+                          <img
+                            src={acc.photo_url}
+                            alt={acc.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                        </div>
+                      )}
+                      <div className="p-6">
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-lg font-semibold tracking-tight">{acc.name}</h3>
+                          <Badge variant="outline" className="capitalize text-xs">
+                            {acc.type}
+                          </Badge>
+                        </div>
+                        {acc.distance_km && (
+                          <div className="flex items-center gap-1.5 mb-4 text-xs text-gray-500">
+                            <MapPin className="h-3.5 w-3.5" />
+                            <span>{acc.distance_km} km dari pantai</span>
+                          </div>
+                        )}
+                        {acc.price_from_idr && (
+                          <div className="mb-4 pb-4 border-b border-gray-100">
+                            <div className="text-2xl font-bold text-gray-900">
+                              {formatRupiah(acc.price_from_idr)}
+                            </div>
+                            <div className="text-xs text-gray-500">per malam</div>
+                          </div>
+                        )}
+                        {acc.facilities && acc.facilities.length > 0 && (
+                          <div className="mb-4">
+                            <p className="text-xs font-medium text-gray-500 mb-2">
+                              Fasilitas
+                            </p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {acc.facilities.slice(0, 4).map((facility, idx) => (
+                                <span key={idx} className="text-xs px-2 py-1 bg-gray-50 text-gray-600 rounded border border-gray-200">
+                                  {facility}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {acc.contact && (
+                          <Button
+                            className="w-full bg-sea-ocean hover:bg-sea-teal transition-colors h-10 text-sm"
+                            onClick={() => handleContact(acc.contact!)}
+                          >
+                            <Phone className="h-4 w-4 mr-2" />
+                            Hubungi
+                          </Button>
+                        )}
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </TabsContent>
 
             {/* Vila */}
             <TabsContent value="vila">

@@ -82,11 +82,11 @@ export default function PaketPage() {
             <div className="flex flex-wrap justify-center gap-6 mb-10">
               <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100">
                 <Users className="h-5 w-5 text-sea-ocean" />
-                <span className="text-sm font-medium text-gray-700">Rombongan 1-50 orang</span>
+                <span className="text-sm font-medium text-gray-700">Rombongan 1-5 orang</span>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100">
                 <Clock className="h-5 w-5 text-sea-teal" />
-                <span className="text-sm font-medium text-gray-700">Durasi 3-12 jam</span>
+                <span className="text-sm font-medium text-gray-700">Durasi 1-6 jam</span>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100">
                 <PackageIcon className="h-5 w-5 text-sea-ocean" />
@@ -149,7 +149,7 @@ export default function PaketPage() {
 
                     {/* Header */}
                     <div className="mb-4 pb-4 border-b border-gray-100">
-                      <h3 className="text-lg font-semibold mb-3 tracking-tight">{pkg.nama}</h3>
+                      <h3 className="text-lg font-semibold mb-3 tracking-tight break-words">{pkg.nama}</h3>
                       
                       {/* Price */}
                       <div className="mb-3">
@@ -174,13 +174,13 @@ export default function PaketPage() {
                     </div>
 
                     {/* Facilities - 2 Columns if more than 3 */}
-                    <div className="mb-4 flex-grow">
+                    <div className="mb-4">
                       <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Termasuk</p>
                       <ul className={`gap-x-3 gap-y-1.5 ${pkg.facilities.length > 3 ? 'grid grid-cols-2' : 'flex flex-col space-y-1.5'}`}>
-                        {pkg.facilities.map((facility, index) => (
-                          <li key={index} className="flex items-start gap-1.5 text-xs text-gray-600">
+                        {pkg.facilities.slice(0, 6).map((facility, index) => (
+                          <li key={index} className="flex items-start gap-1.5 text-xs text-gray-600 min-w-0">
                             <Check className="h-3.5 w-3.5 text-sea-ocean mt-0.5 flex-shrink-0" />
-                            <span className="leading-tight">{facility}</span>
+                            <span className="leading-tight line-clamp-2 break-words">{facility}</span>
                           </li>
                         ))}
                       </ul>
@@ -189,7 +189,7 @@ export default function PaketPage() {
                     {/* Notes */}
                     {pkg.notes && (
                       <div className="mb-4 p-2.5 bg-sea-sand/10 rounded-lg border-l-2 border-sea-coral">
-                        <p className="text-xs text-gray-600 leading-snug">{pkg.notes}</p>
+                        <p className="text-xs text-gray-600 leading-snug line-clamp-3 break-words">{pkg.notes}</p>
                       </div>
                     )}
 

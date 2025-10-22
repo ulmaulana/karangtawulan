@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, Send, Sparkles, Clock } from "lucide-react";
+import { MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, Send, Sparkles, Clock, Youtube } from "lucide-react";
 import { generateKontakWhatsAppUrl, type KontakFormData } from "@/lib/whatsapp";
 
 const kontakSchema = z.object({
@@ -51,150 +51,157 @@ export default function KontakPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Header */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-sea-foam/30 to-white">
-        <div className="container mx-auto px-4 py-24 md:py-32">
-          <div className="max-w-3xl mx-auto text-center">
-            <Badge className="mb-6 bg-sea-ocean/10 text-sea-ocean border-0">
-              <Sparkles className="w-3 h-3 mr-1" />
+      {/* Hero Header - Minimalist */}
+      <section className="border-b border-gray-100">
+        <div className="container mx-auto px-4 py-16 md:py-20">
+          <div className="max-w-4xl">
+            <p className="text-sm font-medium text-sea-ocean mb-3 tracking-wide uppercase">
+              Contact
+            </p>
+            <h1 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
               Hubungi Kami
-            </Badge>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight">
-              Mari
-              <span className="block text-sea-ocean">Bicara</span>
             </h1>
-            <p className="text-xl text-gray-600 leading-relaxed">
+            <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-2xl">
               Kami siap membantu Anda merencanakan liburan sempurna. Hubungi kami untuk pertanyaan, booking, atau informasi lebih lanjut.
             </p>
           </div>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
-          {/* Contact Information - Left Sidebar */}
-          <div className="lg:col-span-2">
-            <h2 className="text-3xl font-bold mb-2 tracking-tight">Informasi Kontak</h2>
-            <p className="text-gray-600 mb-8">Beberapa cara untuk menghubungi kami</p>
+      <div className="container mx-auto px-4 py-12 md:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Contact Information */}
+          <div>
+            <h2 className="text-2xl font-bold mb-6 tracking-tight">Informasi Kontak</h2>
 
             <div className="space-y-4">
-              <Card className="p-6 rounded-3xl border-0 bg-gradient-to-br from-sea-ocean/5 to-transparent hover:shadow-lg transition-all duration-300 group">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-sea-ocean/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                    <MapPin className="h-6 w-6 text-sea-ocean" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Alamat</h3>
-                    <p className="text-gray-600">
-                      Pantai Karangtawulan
-                      <br />
-                      Tasikmalaya, Jawa Barat
-                      <br />
-                      Indonesia
-                    </p>
-                  </div>
+              {/* Location */}
+              <div className="flex items-start gap-4 p-5 rounded-xl border border-gray-200 hover:border-sea-ocean/30 transition-all bg-white">
+                <div className="w-10 h-10 rounded-lg bg-sea-ocean/10 flex items-center justify-center flex-shrink-0">
+                  <MapPin className="h-5 w-5 text-sea-ocean" />
                 </div>
-              </Card>
-
-              <Card className="p-6 rounded-3xl border-0 bg-gradient-to-br from-sea-teal/5 to-transparent hover:shadow-lg transition-all duration-300 group">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-sea-teal/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                    <Phone className="h-6 w-6 text-sea-teal" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">WhatsApp</h3>
-                    <a
-                      href={`https://wa.me/${waAdmin}`}
-                      className="text-sea-ocean hover:text-sea-teal transition-colors font-medium"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      +{waAdmin}
-                    </a>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Klik untuk chat langsung via WhatsApp
-                    </p>
-                  </div>
+                <div>
+                  <h3 className="font-semibold text-sm text-gray-500 mb-1">Alamat</h3>
+                  <p className="text-gray-900 leading-relaxed">
+                    Pantai Karangtawulan<br />
+                    Tasikmalaya, Jawa Barat
+                  </p>
                 </div>
-              </Card>
+              </div>
 
-              <Card className="p-6 rounded-3xl border-0 bg-gradient-to-br from-sea-coral/5 to-transparent hover:shadow-lg transition-all duration-300 group">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-sea-coral/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                    <Mail className="h-6 w-6 text-sea-coral" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Email</h3>
-                    <a
-                      href="mailto:info@karangtawulan.com"
-                      className="text-sea-ocean hover:text-sea-teal transition-colors font-medium"
-                    >
-                      info@karangtawulan.com
-                    </a>
-                  </div>
+              {/* WhatsApp */}
+              <div className="flex items-start gap-4 p-5 rounded-xl border border-gray-200 hover:border-sea-ocean/30 transition-all bg-white">
+                <div className="w-10 h-10 rounded-lg bg-sea-teal/10 flex items-center justify-center flex-shrink-0">
+                  <Phone className="h-5 w-5 text-sea-teal" />
                 </div>
-              </Card>
-
-              <Card className="p-6 rounded-3xl border-0 bg-gradient-to-br from-sea-foam/50 to-transparent hover:shadow-lg transition-all duration-300">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-sea-ocean/10 flex items-center justify-center">
-                    <Sparkles className="h-4 w-4 text-sea-ocean" />
-                  </div>
-                  Media Sosial
-                </h3>
-                <div className="flex gap-4">
+                <div>
+                  <h3 className="font-semibold text-sm text-gray-500 mb-1">WhatsApp</h3>
                   <a
-                    href="#"
-                    className="flex items-center gap-2 text-gray-700 hover:text-sea-turquoise transition-colors"
-                  >
-                    <Facebook className="h-6 w-6" />
-                    <span>Facebook</span>
-                  </a>
-                  <a
-                    href="#"
-                    className="flex items-center gap-2 text-gray-700 hover:text-sea-coral transition-colors"
-                  >
-                    <Instagram className="h-6 w-6" />
-                    <span>Instagram</span>
-                  </a>
-                </div>
-              </Card>
-
-              {/* Quick Contact - Prominent */}
-              <Card className="p-8 rounded-3xl border-0 bg-gradient-to-br from-sea-teal via-sea-ocean to-sea-kelp text-white shadow-xl mt-6">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-4">
-                  <MessageCircle className="h-7 w-7 text-white" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">
-                  Chat Langsung
-                </h3>
-                <p className="text-sm opacity-90 mb-6">
-                  Butuh respon cepat? Hubungi kami langsung via WhatsApp
-                </p>
-                <Button
-                  asChild
-                  className="w-full bg-white text-sea-ocean hover:bg-sea-sand transition-all duration-300 shadow-lg h-12 font-semibold"
-                >
-                  <a
-                    href={`https://wa.me/${waAdmin}?text=Halo Admin Karangtawulan, saya ingin bertanya tentang`}
+                    href={`https://wa.me/${waAdmin}`}
+                    className="text-sea-ocean hover:text-sea-teal transition-colors font-medium"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <MessageCircle className="mr-2 h-5 w-5" />
-                    Chat via WhatsApp
+                    +{waAdmin}
                   </a>
-                </Button>
-              </Card>
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-start gap-4 p-5 rounded-xl border border-gray-200 hover:border-sea-ocean/30 transition-all bg-white">
+                <div className="w-10 h-10 rounded-lg bg-sea-coral/10 flex items-center justify-center flex-shrink-0">
+                  <Mail className="h-5 w-5 text-sea-coral" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm text-gray-500 mb-1">Email</h3>
+                  <a
+                    href="mailto:karangtawulan260@gmail.com"
+                    className="text-sea-ocean hover:text-sea-teal transition-colors font-medium break-all"
+                  >
+                    karangtawulan260@gmail.com
+                  </a>
+                </div>
+              </div>
             </div>
+
+            {/* Social Media Section */}
+            <div className="mt-8">
+              <h3 className="font-semibold mb-4 text-sm text-gray-500">Ikuti Kami</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Instagram */}
+                <a
+                  href="https://instagram.com/karangtawulanofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-pink-500/30 hover:bg-pink-50/50 transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+                    <Instagram className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-500">Instagram</p>
+                    <p className="text-sm font-medium text-gray-900 truncate">@karangtawulanofficial</p>
+                  </div>
+                </a>
+
+                {/* Facebook */}
+                <a
+                  href="https://facebook.com/karangtawulan"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-blue-500/30 hover:bg-blue-50/50 transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0">
+                    <Facebook className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-500">Facebook</p>
+                    <p className="text-sm font-medium text-gray-900 truncate">Karangtawulan</p>
+                  </div>
+                </a>
+
+                {/* TikTok */}
+                <a
+                  href="https://tiktok.com/@karangtawulanofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-gray-900/30 hover:bg-gray-50 transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-gray-900 flex items-center justify-center flex-shrink-0">
+                    <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-500">TikTok</p>
+                    <p className="text-sm font-medium text-gray-900 truncate">@karangtawulanofficial</p>
+                  </div>
+                </a>
+
+                {/* YouTube */}
+                <a
+                  href="https://youtube.com/@pantaikarangtawulanofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-red-500/30 hover:bg-red-50/50 transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-red-600 flex items-center justify-center flex-shrink-0">
+                    <Youtube className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-500">YouTube</p>
+                    <p className="text-sm font-medium text-gray-900 truncate">PantaiKarangTawulanOfficial</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+
           </div>
 
-          {/* Contact Form - Main Content */}
-          <div className="lg:col-span-3">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl font-bold mb-2 tracking-tight">Kirim Pesan</h2>
-              <p className="text-gray-600 mb-8">Isi form dan kami akan menghubungi Anda via WhatsApp</p>
-            </div>
-            <Card className="p-10 rounded-3xl border-0 shadow-xl bg-gradient-to-br from-white to-sea-foam/10">
+          {/* Contact Form */}
+          <div>
+            <h2 className="text-2xl font-bold mb-6 tracking-tight">Kirim Pesan</h2>
+            <Card className="p-6 rounded-xl border border-gray-200 bg-white">
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
                   <Label htmlFor="nama">Nama Lengkap *</Label>
@@ -239,34 +246,24 @@ export default function KontakPage() {
                   )}
                 </div>
 
-                <Card className="p-5 rounded-2xl border-0 bg-sea-ocean/5">
-                  <div className="flex gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-sea-ocean/10 flex items-center justify-center flex-shrink-0">
-                      <MessageCircle className="h-5 w-5 text-sea-ocean" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-sm mb-1 text-sea-ocean">Instant Response</div>
-                      <p className="text-xs text-gray-600 leading-relaxed">
-                        Setelah submit, Anda akan langsung diarahkan ke WhatsApp untuk melanjutkan percakapan dengan tim kami.
-                      </p>
-                    </div>
-                  </div>
-                </Card>
+                <div className="flex gap-3 p-4 rounded-lg bg-sea-ocean/5 border border-sea-ocean/10">
+                  <MessageCircle className="h-5 w-5 text-sea-ocean flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    Setelah submit, Anda akan langsung diarahkan ke WhatsApp untuk melanjutkan percakapan.
+                  </p>
+                </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-xl transition-all duration-300 h-14 text-base font-semibold group"
-                  size="lg"
+                  className="w-full bg-sea-ocean hover:bg-sea-teal transition-all h-11 text-sm font-medium"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
-                    <>
-                      <span className="animate-pulse">Mengirim...</span>
-                    </>
+                    <span className="animate-pulse">Mengirim...</span>
                   ) : (
                     <>
                       Kirim Pesan via WhatsApp
-                      <Send className="ml-2 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      <Send className="ml-2 h-4 w-4" />
                     </>
                   )}
                 </Button>
@@ -275,13 +272,10 @@ export default function KontakPage() {
           </div>
         </div>
 
-        {/* Map Section - Full Width */}
-        <div className="mt-20">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Lokasi Kami</h2>
-            <p className="text-xl text-gray-600">Pantai Karangtawulan, Tasikmalaya</p>
-          </div>
-          <Card className="overflow-hidden rounded-3xl shadow-2xl border-0">
+        {/* Map Section */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold mb-6 tracking-tight">Lokasi Kami</h2>
+          <Card className="overflow-hidden rounded-xl border border-gray-200">
             <div className="aspect-video bg-gray-200">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.3!2d108.2!3d-7.3!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMTgnMDAuMCJTIDEwOMKwMTInMDAuMCJF!5e0!3m2!1sen!2sid!4v1234567890"

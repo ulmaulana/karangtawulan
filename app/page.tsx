@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Sunset, Users, MapPin, Star, Waves, Camera, Clock, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Sunset, Users, MapPin, Star, Waves, Camera, Clock, Calendar, ChevronLeft, ChevronRight, Ticket } from "lucide-react";
 import { supabase, type Package } from "@/lib/supabase";
 import { formatRupiah } from "@/lib/whatsapp";
 
@@ -234,8 +234,25 @@ export default function HomePage() {
           </div>
 
           {loading ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500">Memuat paket wisata...</p>
+            <div className="flex gap-6 overflow-hidden">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="min-w-[300px] lg:min-w-[340px] flex-shrink-0">
+                  <div className="p-6 rounded-2xl border border-gray-100 bg-white">
+                    <div className="h-6 bg-gray-200 rounded w-3/4 mb-3 animate-pulse" />
+                    <div className="h-8 bg-gray-200 rounded w-1/2 mb-4 animate-pulse" />
+                    <div className="flex gap-2 mb-4">
+                      <div className="h-6 w-16 bg-gray-200 rounded-full animate-pulse" />
+                      <div className="h-6 w-16 bg-gray-200 rounded-full animate-pulse" />
+                    </div>
+                    <div className="space-y-2 mb-6">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                      <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                      <div className="h-4 bg-gray-200 rounded w-2/3 animate-pulse" />
+                    </div>
+                    <div className="h-10 bg-gray-200 rounded-lg animate-pulse" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : packages.length === 0 ? (
             <div className="text-center py-12">
@@ -272,15 +289,15 @@ export default function HomePage() {
               {packages.map((pkg) => (
                 <Card
                   key={pkg.id}
-                  className="group relative p-6 rounded-2xl border border-gray-100 hover:border-sea-ocean/20 bg-white hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col min-w-[300px] lg:min-w-[340px] snap-start flex-shrink-0"
+                  className="group relative p-6 rounded-2xl border border-gray-100 hover:border-sea-ocean/20 bg-white hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col w-[300px] lg:w-[340px] snap-start flex-shrink-0"
                 >
                   {/* Subtle gradient background on hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-sea-foam/0 to-sea-ocean/0 group-hover:from-sea-foam/5 group-hover:to-sea-ocean/5 transition-all duration-500" />
                   
-                  <div className="relative flex flex-col flex-grow">
+                  <div className="relative flex flex-col flex-grow min-w-0">
                     {/* Header */}
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold mb-3 tracking-tight">{pkg.nama}</h3>
+                      <h3 className="text-lg font-semibold mb-3 tracking-tight break-words">{pkg.nama}</h3>
                       <div className="flex items-baseline gap-1">
                         <span className="text-2xl font-bold tracking-tight">
                           {formatRupiah(pkg.harga)}
@@ -301,12 +318,12 @@ export default function HomePage() {
                     </div>
 
                     {/* Facilities - 2 Columns if > 3 */}
-                    <div className="mb-4 pb-4 border-b border-gray-100 flex-grow">
+                    <div className="mb-4 pb-4 border-b border-gray-100">
                       <ul className={`gap-x-3 gap-y-1.5 ${pkg.facilities.length > 3 ? 'grid grid-cols-2' : 'flex flex-col space-y-1.5'}`}>
-                        {pkg.facilities.map((facility, index) => (
-                          <li key={index} className="flex items-start gap-1.5 text-xs text-gray-600">
+                        {pkg.facilities.slice(0, 6).map((facility, index) => (
+                          <li key={index} className="flex items-start gap-1.5 text-xs text-gray-600 min-w-0">
                             <span className="text-sea-ocean mt-0.5 flex-shrink-0">✓</span>
-                            <span className="leading-tight">{facility}</span>
+                            <span className="leading-tight line-clamp-2 break-words">{facility}</span>
                           </li>
                         ))}
                       </ul>
@@ -314,7 +331,7 @@ export default function HomePage() {
 
                     {/* Notes */}
                     {pkg.notes && (
-                      <p className="text-xs text-gray-400 mb-4 leading-relaxed">
+                      <p className="text-xs text-gray-400 mb-4 leading-relaxed line-clamp-2 break-words">
                         {pkg.notes}
                       </p>
                     )}
@@ -404,6 +421,16 @@ export default function HomePage() {
                   <div>
                     <h3 className="font-semibold text-sm mb-1 text-gray-900">Musim Terbaik</h3>
                     <p className="text-gray-500 text-sm">April - Oktober untuk cuaca optimal</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <Ticket className="h-5 w-5 text-sea-ocean mt-1 flex-shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-sm mb-1 text-gray-900">Harga Tiket</h3>
+                    <div className="text-gray-500 text-sm space-y-0.5">
+                      <p className="font-medium">Motor: Rp 15.000</p>
+                      <p className="font-medium">Mobil: Rp 30.000</p>
+                    </div>
                   </div>
                 </div>
               </div>
