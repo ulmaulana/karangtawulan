@@ -508,14 +508,17 @@ export function DataTable({
               </TableHeader>
               <TableBody className="**:data-[slot=table-cell]:first:w-8">
                 {table.getRowModel().rows?.length ? (
-                  <SortableContext
-                    items={dataIds}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    {table.getRowModel().rows.map((row) => (
-                      <DraggableRow key={row.id} row={row} />
-                    ))}
-                  </SortableContext>
+                  <>
+                    {/* @ts-expect-error - React 19 type incompatibility with dnd-kit */}
+                    <SortableContext
+                      items={dataIds}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      {table.getRowModel().rows.map((row) => (
+                        <DraggableRow key={row.id} row={row} />
+                      ))}
+                    </SortableContext>
+                  </>
                 ) : (
                   <TableRow>
                     <TableCell
