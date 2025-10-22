@@ -30,7 +30,7 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
     
-    const updateData: any = {
+    const updateData: Partial<typeof galleryImages.$inferInsert> = {
       ...body,
       updatedAt: new Date(),
     };

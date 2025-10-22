@@ -190,7 +190,7 @@ export default function DashboardPage() {
             </li>
             <li className="flex items-start gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-sea-ocean mt-2"></div>
-              <span>Klik "Kelola" pada setiap kartu untuk mengelola konten</span>
+              <span>Klik &quot;Kelola&quot; pada setiap kartu untuk mengelola konten</span>
             </li>
             <li className="flex items-start gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-sea-ocean mt-2"></div>

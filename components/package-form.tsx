@@ -142,9 +142,9 @@ export function PackageForm({ isOpen, onClose, onSuccess, editData }: PackageFor
       onClose();
       reset();
       setFacilitiesList([]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error saving package:", error);
-      alert("Gagal menyimpan paket: " + error.message);
+      alert("Gagal menyimpan paket: " + (error as Error).message);
     } finally {
       setIsSubmitting(false);
     }

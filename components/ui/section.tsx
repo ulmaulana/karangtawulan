@@ -63,7 +63,8 @@ const Section = forwardRef<HTMLElement, SectionProps>(
 
     return (
       <Component
-        ref={ref as any}
+        // @ts-expect-error - Component can be different HTML elements
+        ref={ref}
         className={cn(spacingClasses[spacing], className)}
         {...props}
       >

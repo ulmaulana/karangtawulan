@@ -111,7 +111,7 @@ export type Nearby = {
 export type Lead = {
   id: string;
   kind: 'booking' | 'akomodasi' | 'aksesori' | 'kontak';
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
   user_agent?: string;
   ip?: string;
   created_at: string;

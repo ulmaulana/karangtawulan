@@ -3,13 +3,14 @@
 // Note: Package ini hanya diperlukan saat deploy ke Vercel
 
 // Conditional import untuk avoid error di development
-let kv: any;
+let kv: { incr: (key: string) => Promise<number>; expire: (key: string, seconds: number) => Promise<void> } | null = null;
 try {
-  kv = require('@vercel/kv').kv;
-} catch (error) {
+  // Dynamic import using eval to avoid bundler issues
+  const kvModule = eval('require')('@vercel/kv');
+  kv = kvModule.kv;
+} catch {
   // Fallback untuk development (akan use in-memory rate limiter)
   console.warn('Vercel KV not available, using fallback rate limiter');
-  kv = null;
 }
 
 export interface RateLimitOptions {

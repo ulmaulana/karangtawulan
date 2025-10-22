@@ -238,10 +238,10 @@ export async function POST(request: NextRequest) {
       message: response,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Chat error:", error);
     return NextResponse.json(
-      { error: "Failed to process chat", details: error.message },
+      { error: "Failed to process chat", details: (error as Error).message },
       { status: 500 }
     );
   }

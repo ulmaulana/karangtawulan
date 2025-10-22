@@ -36,8 +36,8 @@ export default function LoginPage() {
         // Redirect to dashboard or specified redirect URL
         router.push(redirect);
       }
-    } catch (err: any) {
-      setError(err.message || "Terjadi kesalahan. Silakan coba lagi.");
+    } catch (err: unknown) {
+      setError((err as Error).message || "Terjadi kesalahan. Silakan coba lagi.");
     } finally {
       setLoading(false);
     }
