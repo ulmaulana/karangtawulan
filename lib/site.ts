@@ -22,11 +22,11 @@ export const siteConfig = {
   social: {
     instagram: "https://instagram.com/karangtawulan",
     whatsapp: "6282218738881",
-    email: "info@karangtawulan.com",
+    email: "karangtawulan260@gmail.com",
   },
   contact: {
     phone: "+62 812-3456-789",
-    email: "info@karangtawulan.com",
+    email: "karangtawulan260@gmail.com",
     address: "Pantai KarangTawulan, Jawa Timur, Indonesia",
   },
 } as const;
@@ -45,8 +45,8 @@ export const navigation = [
     href: "/akomodasi",
   },
   {
-    name: "Jelajah",
-    href: "/jelajah",
+    name: "Destinasi",
+    href: "/destinasi",
   },
   {
     name: "Galeri",
@@ -62,7 +62,7 @@ export const footerLinks = {
   explore: [
     { name: "Paket Wisata", href: "/paket" },
     { name: "Akomodasi", href: "/akomodasi" },
-    { name: "Aktivitas & Jelajah", href: "/jelajah" },
+    { name: "Destinasi Wisata", href: "/destinasi" },
     { name: "Galeri Foto", href: "/galeri" },
   ],
   company: [

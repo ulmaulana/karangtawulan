@@ -116,3 +116,17 @@ export type Lead = {
   ip?: string;
   created_at: string;
 };
+
+export type Destination = {
+  id: string;
+  name: string;
+  description: string;
+  distance_from_karangtawulan?: string;
+  travel_time?: string;
+  highlights?: string[];
+  photo_url?: string;
+  published: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+};
