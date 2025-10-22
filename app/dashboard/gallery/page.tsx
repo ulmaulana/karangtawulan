@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import {
   AlertDialog,
@@ -45,6 +46,9 @@ export default function GalleryPage() {
   const [editingImage, setEditingImage] = useState<GalleryImage | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -106,9 +110,11 @@ export default function GalleryPage() {
               takenAt: "",
               published: false,
             });
+            setSelectedFile(null);
+            setPreviewUrl(null);
             setIsDialogOpen(true);
           }}
-          className="bg-gradient-to-r from-orange-500 to-red-500 hover:shadow-lg"
+          className="bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-lg"
         >
           <Upload className="h-4 w-4 mr-2" />
           Upload Foto
@@ -128,7 +134,7 @@ export default function GalleryPage() {
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Published</CardTitle>
+            <CardTitle className="text-sm font-medium">Tayang</CardTitle>
             <Eye className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
@@ -202,14 +208,33 @@ export default function GalleryPage() {
                     </div>
                   </div>
                 </div>
-                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                  <ImageIcon className="h-8 w-8 text-gray-400" />
-                </div>
+                {img.url ? (
+                  <img src={img.url} alt={img.category || ''} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                    <ImageIcon className="h-8 w-8 text-gray-400" />
+                  </div>
+                )}
               </div>
             ))}
             
             {/* Upload Button */}
-            <button className="aspect-square rounded-xl border-2 border-dashed border-gray-300 hover:border-sea-ocean hover:bg-sea-foam/10 transition-colors flex flex-col items-center justify-center gap-2 text-gray-500 hover:text-sea-ocean">
+            <button 
+              onClick={() => {
+                setEditingImage(null);
+                setFormData({
+                  url: "",
+                  category: "",
+                  credit: "",
+                  takenAt: "",
+                  published: false,
+                });
+                setSelectedFile(null);
+                setPreviewUrl(null);
+                setIsDialogOpen(true);
+              }}
+              className="aspect-square rounded-xl border-2 border-dashed border-gray-300 hover:border-sea-ocean hover:bg-sea-foam/10 transition-colors flex flex-col items-center justify-center gap-2 text-gray-500 hover:text-sea-ocean"
+            >
               <Plus className="h-8 w-8" />
               <span className="text-xs font-medium">Upload</span>
             </button>
@@ -228,24 +253,69 @@ export default function GalleryPage() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <Label htmlFor="url">URL Foto *</Label>
-              <Input
-                id="url"
-                value={formData.url}
-                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                placeholder="https://example.com/image.jpg"
-              />
-              <p className="text-xs text-gray-500 mt-1">Masukkan URL foto atau upload ke hosting terlebih dahulu</p>
+              <Label htmlFor="image">Upload Foto *</Label>
+              <div className="mt-2">
+                {previewUrl || (editingImage && formData.url) ? (
+                  <div className="relative aspect-video w-full rounded-lg overflow-hidden bg-gray-100 mb-3">
+                    <img 
+                      src={previewUrl || formData.url} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover"
+                    />
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="destructive"
+                      className="absolute top-2 right-2"
+                      onClick={() => {
+                        setSelectedFile(null);
+                        setPreviewUrl(null);
+                        if (!editingImage) {
+                          setFormData({ ...formData, url: "" });
+                        }
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : null}
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setSelectedFile(file);
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setPreviewUrl(reader.result as string);
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="cursor-pointer"
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, WEBP (Max 5MB)</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="category">Kategori</Label>
-                <Input
-                  id="category"
+                <Label htmlFor="category">Kategori *</Label>
+                <Select
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  placeholder="landscape, activities, etc."
-                />
+                  onValueChange={(value) => setFormData({ ...formData, category: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pilih kategori" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sunset">Sunset</SelectItem>
+                    <SelectItem value="sunrise">Sunrise</SelectItem>
+                    <SelectItem value="aktivitas">Aktivitas</SelectItem>
+                    <SelectItem value="pantai">Pantai</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <Label htmlFor="credit">Credit</Label>
@@ -272,7 +342,7 @@ export default function GalleryPage() {
                 checked={formData.published}
                 onCheckedChange={(checked) => setFormData({ ...formData, published: checked })}
               />
-              <Label htmlFor="published">Publish foto ini</Label>
+              <Label htmlFor="published">Posting foto ini</Label>
             </div>
           </div>
           <DialogFooter>
@@ -281,11 +351,50 @@ export default function GalleryPage() {
             </Button>
             <Button
               onClick={async () => {
+                // Validation
+                if (!editingImage && !selectedFile) {
+                  toast({
+                    title: "Error",
+                    description: "Pilih foto terlebih dahulu",
+                    variant: "destructive",
+                  });
+                  return;
+                }
+
                 setIsSaving(true);
+                setUploading(true);
+                
                 try {
+                  let imageUrl = formData.url;
+
+                  // Upload file if new file selected
+                  if (selectedFile) {
+                    const fileExt = selectedFile.name.split('.').pop();
+                    const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+                    const filePath = `gallery/${fileName}`;
+
+                    const formDataUpload = new FormData();
+                    formDataUpload.append('file', selectedFile);
+                    formDataUpload.append('path', filePath);
+
+                    const uploadResponse = await fetch('/api/upload', {
+                      method: 'POST',
+                      body: formDataUpload,
+                    });
+
+                    if (!uploadResponse.ok) throw new Error('Upload failed');
+                    
+                    const uploadData = await uploadResponse.json();
+                    imageUrl = uploadData.url;
+                  }
+
+                  // Save to database
                   const payload = {
-                    ...formData,
+                    url: imageUrl,
+                    category: formData.category,
+                    credit: formData.credit,
                     takenAt: formData.takenAt || null,
+                    published: formData.published,
                   };
 
                   const url = editingImage ? `/api/gallery/${editingImage.id}` : "/api/gallery";
@@ -305,8 +414,11 @@ export default function GalleryPage() {
                   });
 
                   setIsDialogOpen(false);
+                  setSelectedFile(null);
+                  setPreviewUrl(null);
                   fetchImages();
                 } catch (error) {
+                  console.error('Error:', error);
                   toast({
                     title: "Error",
                     description: "Gagal menyimpan foto",
@@ -314,12 +426,13 @@ export default function GalleryPage() {
                   });
                 } finally {
                   setIsSaving(false);
+                  setUploading(false);
                 }
               }}
-              disabled={isSaving || !formData.url}
-              className="bg-gradient-to-r from-orange-500 to-red-500"
+              disabled={isSaving || (!editingImage && !selectedFile)}
+              className="bg-gradient-to-r from-sea-ocean to-sea-teal"
             >
-              {isSaving ? "Menyimpan..." : "Simpan"}
+              {uploading ? "Mengupload..." : isSaving ? "Menyimpan..." : "Simpan"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -89,10 +89,9 @@ export default function AccessoriesPage() {
   }, []);
 
   const formatRupiah = (amount: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
+    return "Rp " + new Intl.NumberFormat("id-ID", {
       minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 
@@ -125,7 +124,7 @@ export default function AccessoriesPage() {
             });
             setIsDialogOpen(true);
           }}
-          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:shadow-lg"
+          className="bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-lg"
         >
           <Plus className="h-4 w-4 mr-2" />
           Tambah Aksesori

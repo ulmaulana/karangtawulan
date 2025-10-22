@@ -100,10 +100,9 @@ export default function PackagesPage() {
   }, []);
 
   const formatRupiah = (amount: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
+    return "Rp " + new Intl.NumberFormat("id-ID", {
       minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 
@@ -164,7 +163,7 @@ export default function PackagesPage() {
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Published</CardTitle>
+            <CardTitle className="text-sm font-medium">Tayang</CardTitle>
             <Eye className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
@@ -243,7 +242,7 @@ export default function PackagesPage() {
                     {pkg.published ? (
                       <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
                         <Eye className="h-3 w-3 mr-1" />
-                        Published
+                        Tayang
                       </Badge>
                     ) : (
                       <Badge variant="secondary">
@@ -408,7 +407,7 @@ export default function PackagesPage() {
                 checked={formData.published}
                 onCheckedChange={(checked) => setFormData({ ...formData, published: checked })}
               />
-              <Label htmlFor="published">Publish paket ini</Label>
+              <Label htmlFor="published">Posting paket ini</Label>
             </div>
           </div>
           <DialogFooter>

@@ -77,8 +77,8 @@ export default function DashboardPage() {
       stats: stats?.gallery,
     },
     {
-      title: "Form Submissions",
-      description: "Leads dari pengunjung website",
+      title: "Formulir Masuk",
+      description: "Data pengunjung dari website",
       icon: MessageSquare,
       href: "/dashboard/leads",
       color: "from-blue-500 to-cyan-500",
@@ -177,7 +177,7 @@ export default function DashboardPage() {
             <div>
               <CardTitle className="text-lg">Tips</CardTitle>
               <CardDescription>
-                Pastikan konten sudah dipublish agar muncul di website
+                Pastikan konten sudah diposting agar muncul di website
               </CardDescription>
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function DashboardPage() {
           <ul className="space-y-2 text-sm text-gray-700">
             <li className="flex items-start gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-sea-ocean mt-2"></div>
-              <span>Gunakan <Eye className="inline h-3 w-3 text-green-600" /> untuk melihat konten yang sudah published</span>
+              <span>Gunakan <Eye className="inline h-3 w-3 text-green-600" /> untuk melihat konten yang sudah tayang</span>
             </li>
             <li className="flex items-start gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-sea-ocean mt-2"></div>
@@ -194,7 +194,7 @@ export default function DashboardPage() {
             </li>
             <li className="flex items-start gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-sea-ocean mt-2"></div>
-              <span>Check Form Submissions secara berkala untuk leads baru</span>
+              <span>Periksa Formulir Masuk secara berkala untuk data pengunjung baru</span>
             </li>
           </ul>
         </CardContent>
