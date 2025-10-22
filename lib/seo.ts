@@ -11,7 +11,7 @@ interface PageSEO {
   description?: string;
   image?: string;
   url?: string;
-  keywords?: string[];
+  keywords?: readonly string[] | string[];
   noindex?: boolean;
 }
 
