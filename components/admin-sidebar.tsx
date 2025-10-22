@@ -8,12 +8,11 @@ import {
   Package,
   Home,
   Image,
-  ShoppingBag,
   Hotel,
-  MessageSquare,
   LogOut,
   Menu,
   X,
+  MapPin,
 } from "lucide-react";
 import { useState } from "react";
 import { signOut } from "@/lib/auth-client";
@@ -22,9 +21,8 @@ const menuItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/dashboard/packages", label: "Paket Wisata", icon: Package },
   { href: "/dashboard/accommodations", label: "Akomodasi", icon: Hotel },
-  { href: "/dashboard/accessories", label: "Aksesori", icon: ShoppingBag },
+  { href: "/dashboard/destinations", label: "Destinasi", icon: MapPin },
   { href: "/dashboard/gallery", label: "Galeri", icon: Image },
-  { href: "/dashboard/leads", label: "Form Submissions", icon: MessageSquare },
 ];
 
 export function AdminSidebar() {

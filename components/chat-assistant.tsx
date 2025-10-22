@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { MessageCircle, X, Send, Loader2, Sparkles, MapPin, Ticket, Home, Calendar } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Sparkles, MapPin, Ticket, Home, Calendar, MessageSquare, Instagram } from "lucide-react";
 
 type Message = {
   role: "user" | "assistant";
@@ -13,11 +13,12 @@ type Message = {
 };
 
 const QUICK_REPLIES = [
-  { text: "Rekomendasi paket", icon: Sparkles },
-  { text: "Rencana Perjalanan 2 jam", icon: Calendar },
-  { text: "Harga tiket", icon: Ticket },
-  { text: "Akomodasi terdekat", icon: MapPin },
-  { text: "Booking sekarang", icon: Home },
+  { text: "Rekomendasi Paket", icon: Sparkles },
+  { text: "Kontak Admin", icon: MessageSquare },
+  { text: "Sosial Media KarangTawulan", icon: Instagram },
+  { text: "Harga Tiket", icon: Ticket },
+  { text: "Akomodasi", icon: Home },
+  { text: "Destinasi", icon: MapPin },
 ];
 
 export function ChatAssistant() {

@@ -18,7 +18,7 @@ export function Navbar() {
     { href: "/", label: "Beranda" },
     { href: "/paket", label: "Paket Wisata" },
     { href: "/akomodasi", label: "Akomodasi" },
-    { href: "/jelajah", label: "Jelajah" },
+    { href: "/destinasi", label: "Destinasi" },
     { href: "/galeri", label: "Galeri" },
     { href: "/kontak", label: "Kontak" },
   ];

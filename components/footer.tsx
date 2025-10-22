@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { Instagram, Mail, MapPin, Phone, Youtube } from "lucide-react";
 
 export function Footer() {
   return (
@@ -18,18 +18,33 @@ export function Footer() {
             </p>
             <div className="flex gap-4">
               <a
-                href="#"
-                className="hover:text-sea-turquoise transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a
-                href="#"
-                className="hover:text-sea-coral transition-colors"
+                href="https://instagram.com/karangtawulanofficial"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-pink-500 transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
+              </a>
+              <a
+                href="https://tiktok.com/@karangtawulanofficial"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-sea-teal transition-colors"
+                aria-label="TikTok"
+              >
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+                </svg>
+              </a>
+              <a
+                href="https://youtube.com/@pantaikarangtawulanofficial"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-red-500 transition-colors"
+                aria-label="YouTube"
+              >
+                <Youtube className="h-5 w-5" />
               </a>
             </div>
           </div>
@@ -49,8 +64,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/jelajah" className="hover:text-sea-teal transition-colors">
-                  Jelajah
+                <Link href="/destinasi" className="hover:text-sea-teal transition-colors">
+                  Destinasi
                 </Link>
               </li>
               <li>
@@ -78,18 +93,20 @@ export function Footer() {
                 <Phone className="h-5 w-5 flex-shrink-0 text-sea-teal" />
                 <a
                   href="https://wa.me/6282218738881"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-sea-teal transition-colors"
                 >
-                  WhatsApp Admin
+                  +62 822-1873-8881
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-5 w-5 flex-shrink-0 text-sea-teal" />
                 <a
-                  href="mailto:info@karangtawulan.com"
+                  href="mailto:karangtawulan260@gmail.com"
                   className="hover:text-sea-teal transition-colors"
                 >
-                  info@karangtawulan.com
+                  karangtawulan260@gmail.com
                 </a>
               </li>
             </ul>
