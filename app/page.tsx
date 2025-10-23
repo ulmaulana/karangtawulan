@@ -102,10 +102,6 @@ export default function HomePage() {
                 <div className="text-3xl font-bold text-sea-ocean">3+</div>
                 <div className="text-sm text-gray-500">Paket Pilihan</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold text-sea-ocean">24/7</div>
-                <div className="text-sm text-gray-500">Layanan</div>
-              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">

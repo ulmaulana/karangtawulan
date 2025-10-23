@@ -275,19 +275,22 @@ export default function KontakPage() {
         {/* Map Section */}
         <div className="mt-16">
           <h2 className="text-2xl font-bold mb-6 tracking-tight">Lokasi Kami</h2>
-          <Card className="overflow-hidden rounded-xl border border-gray-200">
-            <div className="aspect-video bg-gray-200">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.3!2d108.2!3d-7.3!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMTgnMDAuMCJTIDEwOMKwMTInMDAuMCJF!5e0!3m2!1sen!2sid!4v1234567890"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </div>
-          </Card>
+          <div className="flex justify-center">
+            <Button
+              asChild
+              variant="outline"
+              className="border-sea-ocean text-sea-ocean hover:bg-sea-ocean hover:text-white"
+            >
+              <a
+                href="https://maps.app.goo.gl/xZNeAa1hMmjyQhEUA"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MapPin className="mr-2 h-4 w-4" />
+                Klik disini untuk melihat peta KarangTawulan di Google Maps
+              </a>
+            </Button>
+          </div>
         </div>
       </div>
     </div>

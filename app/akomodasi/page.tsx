@@ -92,40 +92,43 @@ export default function AkomodasiPage() {
           </div>
         ) : (
           <Tabs defaultValue="semua" className="w-full">
-            <TabsList className="inline-flex gap-2 bg-transparent border-b border-gray-200 w-full mb-12 rounded-none p-0">
-              <TabsTrigger 
-                value="semua" 
-                className="rounded-none px-6 py-3 border-b-2 border-transparent data-[state=active]:border-sea-ocean data-[state=active]:text-sea-ocean font-medium text-sm"
-              >
-                <Sparkles className="w-4 h-4 mr-2" />
-                Semua
-                <span className="ml-1.5 text-xs bg-gray-100 px-2 py-0.5 rounded-full">{accommodations.length}</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="vila" 
-                className="rounded-none px-6 py-3 border-b-2 border-transparent data-[state=active]:border-sea-ocean data-[state=active]:text-sea-ocean font-medium text-sm"
-              >
-                <Home className="w-4 h-4 mr-2" />
-                Vila
-                <span className="ml-1.5 text-xs bg-gray-100 px-2 py-0.5 rounded-full">{vilas.length}</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="penginapan"
-                className="rounded-none px-6 py-3 border-b-2 border-transparent data-[state=active]:border-sea-ocean data-[state=active]:text-sea-ocean font-medium text-sm"
-              >
-                <Building2 className="w-4 h-4 mr-2" />
-                Penginapan
-                <span className="ml-1.5 text-xs bg-gray-100 px-2 py-0.5 rounded-full">{penginapan.length}</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="camping"
-                className="rounded-none px-6 py-3 border-b-2 border-transparent data-[state=active]:border-sea-ocean data-[state=active]:text-sea-ocean font-medium text-sm"
-              >
-                <Tent className="w-4 h-4 mr-2" />
-                Camping
-                <span className="ml-1.5 text-xs bg-gray-100 px-2 py-0.5 rounded-full">{camping.length}</span>
-              </TabsTrigger>
-            </TabsList>
+            {/* Wrapper with horizontal scroll only for tabs */}
+            <div className="overflow-x-auto scrollbar-hide -mx-4 px-4 mb-12">
+              <TabsList className="inline-flex gap-2 bg-transparent border-b border-gray-200 min-w-max rounded-none p-0">
+                <TabsTrigger 
+                  value="semua" 
+                  className="rounded-none px-4 md:px-6 py-3 border-b-2 border-transparent data-[state=active]:border-sea-ocean data-[state=active]:text-sea-ocean font-medium text-sm whitespace-nowrap"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Semua
+                  <span className="ml-1.5 text-xs bg-gray-100 px-2 py-0.5 rounded-full">{accommodations.length}</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="vila" 
+                  className="rounded-none px-4 md:px-6 py-3 border-b-2 border-transparent data-[state=active]:border-sea-ocean data-[state=active]:text-sea-ocean font-medium text-sm whitespace-nowrap"
+                >
+                  <Home className="w-4 h-4 mr-2" />
+                  Vila
+                  <span className="ml-1.5 text-xs bg-gray-100 px-2 py-0.5 rounded-full">{vilas.length}</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="penginapan"
+                  className="rounded-none px-4 md:px-6 py-3 border-b-2 border-transparent data-[state=active]:border-sea-ocean data-[state=active]:text-sea-ocean font-medium text-sm whitespace-nowrap"
+                >
+                  <Building2 className="w-4 h-4 mr-2" />
+                  Penginapan
+                  <span className="ml-1.5 text-xs bg-gray-100 px-2 py-0.5 rounded-full">{penginapan.length}</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="camping"
+                  className="rounded-none px-4 md:px-6 py-3 border-b-2 border-transparent data-[state=active]:border-sea-ocean data-[state=active]:text-sea-ocean font-medium text-sm whitespace-nowrap"
+                >
+                  <Tent className="w-4 h-4 mr-2" />
+                  Camping
+                  <span className="ml-1.5 text-xs bg-gray-100 px-2 py-0.5 rounded-full">{camping.length}</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             {/* Semua */}
             <TabsContent value="semua">

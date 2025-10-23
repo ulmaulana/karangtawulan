@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase, type GalleryImage } from "@/lib/supabase";
-import { Camera, Loader2, X, Image as ImageIcon, Sparkles } from "lucide-react";
+import { Camera, Loader2, X, Image as ImageIcon, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function GaleriPage() {
   const [images, setImages] = useState<GalleryImage[]>([]);
@@ -60,7 +60,25 @@ export default function GaleriPage() {
   const activityImages = images.filter((img) => img.category === "aktivitas");
   const beachImages = images.filter((img) => img.category === "pantai");
 
+  const IMAGES_PER_PAGE = 12;
+
   const ImageGrid = ({ images }: { images: GalleryImage[] }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    
+    const totalPages = Math.ceil(images.length / IMAGES_PER_PAGE);
+    const startIndex = (currentPage - 1) * IMAGES_PER_PAGE;
+    const endIndex = startIndex + IMAGES_PER_PAGE;
+    const currentImages = images.slice(startIndex, endIndex);
+
+    // Reset to page 1 when images change (e.g., switching tabs)
+    useEffect(() => {
+      setCurrentPage(1);
+    }, [images.length]);
+
+    // Scroll to top when page changes
+    useEffect(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [currentPage]);
     if (images.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center py-20 text-gray-500">
@@ -73,8 +91,9 @@ export default function GaleriPage() {
     }
 
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {images.map((image, index) => (
+      <>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {currentImages.map((image, index) => (
           <div
             key={image.id}
             className="group relative overflow-hidden rounded-xl cursor-pointer bg-gray-100 border border-gray-200 hover:border-sea-ocean/30 transition-all duration-300 aspect-square"
@@ -98,7 +117,103 @@ export default function GaleriPage() {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+              className="disabled:opacity-50 w-full sm:w-auto"
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Sebelumnya
+            </Button>
+            
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+              {totalPages <= 7 ? (
+                // Show all pages if 7 or less
+                Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(page)}
+                    className={currentPage === page ? "bg-sea-ocean hover:bg-sea-teal" : ""}
+                  >
+                    {page}
+                  </Button>
+                ))
+              ) : (
+                // Show smart pagination for more than 7 pages
+                <>
+                  {/* First page */}
+                  <Button
+                    variant={currentPage === 1 ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(1)}
+                    className={currentPage === 1 ? "bg-sea-ocean hover:bg-sea-teal" : ""}
+                  >
+                    1
+                  </Button>
+
+                  {/* Left ellipsis */}
+                  {currentPage > 3 && <span className="px-2 text-gray-400">...</span>}
+
+                  {/* Pages around current */}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(page => {
+                      return page > 1 && page < totalPages && Math.abs(page - currentPage) <= 1;
+                    })
+                    .map((page) => (
+                      <Button
+                        key={page}
+                        variant={currentPage === page ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(page)}
+                        className={currentPage === page ? "bg-sea-ocean hover:bg-sea-teal" : ""}
+                      >
+                        {page}
+                      </Button>
+                    ))}
+
+                  {/* Right ellipsis */}
+                  {currentPage < totalPages - 2 && <span className="px-2 text-gray-400">...</span>}
+
+                  {/* Last page */}
+                  <Button
+                    variant={currentPage === totalPages ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(totalPages)}
+                    className={currentPage === totalPages ? "bg-sea-ocean hover:bg-sea-teal" : ""}
+                  >
+                    {totalPages}
+                  </Button>
+                </>
+              )}
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+              className="disabled:opacity-50 w-full sm:w-auto"
+            >
+              Selanjutnya
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
+        )}
+
+        {/* Page Info */}
+        <div className="text-center mt-6 text-sm text-gray-500">
+          Menampilkan {startIndex + 1}-{Math.min(endIndex, images.length)} dari {images.length} foto
+        </div>
+      </>
     );
   };
 
