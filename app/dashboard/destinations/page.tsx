@@ -48,7 +48,12 @@ export default function AdminDestinasiPage() {
 
   const loadDestinations = async () => {
     try {
-      const response = await fetch("/api/destinations?includeUnpublished=true");
+      const response = await fetch("/api/destinations?includeUnpublished=true", {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
       const data = await response.json();
       
       // Ensure data is an array
