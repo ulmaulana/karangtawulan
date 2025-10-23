@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,7 @@ export default function GaleriPage() {
     loadGallery();
 
     // Setup realtime subscription for auto-updates with error handling
-    let channel: any = null;
+    let channel: RealtimeChannel | null = null;
     try {
       channel = supabase
         .channel("gallery_images_changes")

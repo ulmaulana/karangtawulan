@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 import { Card } from "@/components/ui/card";
 import { supabase, type Destination } from "@/lib/supabase";
 import { MapPin, Clock, Sparkles, ChevronRight } from "lucide-react";
@@ -36,7 +37,7 @@ export default function DestinasiPage() {
     loadDestinations();
 
     // Setup realtime subscription with error handling
-    let channel: any = null;
+    let channel: RealtimeChannel | null = null;
     try {
       channel = supabase
         .channel("destinations_changes")

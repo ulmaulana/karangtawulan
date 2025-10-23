@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,7 @@ export default function AkomodasiPage() {
     loadAccommodations();
 
     // Setup realtime subscription for auto-updates with error handling
-    let channel: any = null;
+    let channel: RealtimeChannel | null = null;
     try {
       channel = supabase
         .channel("accommodations_changes")
