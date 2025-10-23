@@ -32,26 +32,45 @@ export default function GaleriPage() {
 
     loadGallery();
 
-    // Setup realtime subscription for auto-updates
-    const channel = supabase
-      .channel("gallery_images_changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*", // Listen to all events (INSERT, UPDATE, DELETE)
-          schema: "public",
-          table: "gallery_images",
-        },
-        () => {
-          // Reload gallery when any change occurs
-          loadGallery();
-        }
-      )
-      .subscribe();
+    // Setup realtime subscription for auto-updates with error handling
+    let channel: any = null;
+    try {
+      channel = supabase
+        .channel("gallery_images_changes")
+        .on(
+          "postgres_changes",
+          {
+            event: "*", // Listen to all events (INSERT, UPDATE, DELETE)
+            schema: "public",
+            table: "gallery_images",
+          },
+          () => {
+            // Reload gallery when any change occurs
+            loadGallery();
+          }
+        )
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            console.log('Realtime subscription active');
+          }
+          if (status === 'CHANNEL_ERROR') {
+            console.warn('Realtime subscription error, continuing without realtime updates');
+          }
+        });
+    } catch (error) {
+      console.warn('Failed to setup realtime subscription:', error);
+      // Continue without realtime - page will still work
+    }
 
     // Cleanup subscription on unmount
     return () => {
-      supabase.removeChannel(channel);
+      try {
+        if (channel) {
+          supabase.removeChannel(channel);
+        }
+      } catch (error) {
+        console.warn('Error cleaning up channel:', error);
+      }
     };
   }, []);
 

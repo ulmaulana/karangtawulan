@@ -33,26 +33,45 @@ export default function AkomodasiPage() {
 
     loadAccommodations();
 
-    // Setup realtime subscription for auto-updates
-    const channel = supabase
-      .channel("accommodations_changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*", // Listen to all events (INSERT, UPDATE, DELETE)
-          schema: "public",
-          table: "accommodations",
-        },
-        () => {
-          // Reload accommodations when any change occurs
-          loadAccommodations();
-        }
-      )
-      .subscribe();
+    // Setup realtime subscription for auto-updates with error handling
+    let channel: any = null;
+    try {
+      channel = supabase
+        .channel("accommodations_changes")
+        .on(
+          "postgres_changes",
+          {
+            event: "*", // Listen to all events (INSERT, UPDATE, DELETE)
+            schema: "public",
+            table: "accommodations",
+          },
+          () => {
+            // Reload accommodations when any change occurs
+            loadAccommodations();
+          }
+        )
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            console.log('Realtime subscription active');
+          }
+          if (status === 'CHANNEL_ERROR') {
+            console.warn('Realtime subscription error, continuing without realtime updates');
+          }
+        });
+    } catch (error) {
+      console.warn('Failed to setup realtime subscription:', error);
+      // Continue without realtime - page will still work
+    }
 
     // Cleanup subscription on unmount
     return () => {
-      supabase.removeChannel(channel);
+      try {
+        if (channel) {
+          supabase.removeChannel(channel);
+        }
+      } catch (error) {
+        console.warn('Error cleaning up channel:', error);
+      }
     };
   }, []);
 

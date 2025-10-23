@@ -35,24 +35,43 @@ export default function DestinasiPage() {
 
     loadDestinations();
 
-    // Setup realtime subscription
-    const channel = supabase
-      .channel("destinations_changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "destinations",
-        },
-        () => {
-          loadDestinations();
-        }
-      )
-      .subscribe();
+    // Setup realtime subscription with error handling
+    let channel: any = null;
+    try {
+      channel = supabase
+        .channel("destinations_changes")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "destinations",
+          },
+          () => {
+            loadDestinations();
+          }
+        )
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            console.log('Realtime subscription active');
+          }
+          if (status === 'CHANNEL_ERROR') {
+            console.warn('Realtime subscription error, continuing without realtime updates');
+          }
+        });
+    } catch (error) {
+      console.warn('Failed to setup realtime subscription:', error);
+      // Continue without realtime - page will still work
+    }
 
     return () => {
-      supabase.removeChannel(channel);
+      try {
+        if (channel) {
+          supabase.removeChannel(channel);
+        }
+      } catch (error) {
+        console.warn('Error cleaning up channel:', error);
+      }
     };
   }, []);
 
