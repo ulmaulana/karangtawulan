@@ -100,90 +100,92 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-6 md:space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-        <p className="text-gray-600">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Dashboard</h1>
+        <p className="text-sm sm:text-base text-gray-600">
           Kelola konten dan data Karangtawulan
         </p>
       </div>
 
-      {/* Quick Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {quickLinks.map((link) => {
-          const Icon = link.icon;
-          
-          return (
-            <Card 
-              key={link.href}
-              className="group hover:shadow-xl transition-all duration-300 border-0 overflow-hidden relative"
-            >
-              {/* Gradient Background */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${link.color} opacity-5 group-hover:opacity-10 transition-opacity`}></div>
+      {/* Quick Stats Table */}
+      <div className="border rounded-lg overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Menu</th>
+              <th className="px-3 py-2 text-center font-medium text-gray-600">Total</th>
+              <th className="px-3 py-2 text-center font-medium text-gray-600">Tayang</th>
+              <th className="px-3 py-2 text-center font-medium text-gray-600">Draft</th>
+              <th className="px-3 py-2 text-center font-medium text-gray-600">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {quickLinks.map((link) => {
+              const Icon = link.icon;
               
-              <CardHeader className="relative">
-                <div className="flex items-start justify-between">
-                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${link.color} flex items-center justify-center shadow-lg`}>
-                    <Icon className="h-6 w-6 text-white" />
-                  </div>
-                  
-                  {link.stats && (
-                    <div className="text-right">
-                      <div className="text-3xl font-bold text-gray-900">
-                        {link.stats.total}
+              return (
+                <tr key={link.href} className="border-b last:border-b-0 hover:bg-gray-50">
+                  <td className="px-3 py-3">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${link.color} flex items-center justify-center flex-shrink-0`}>
+                        <Icon className="h-3.5 w-3.5 text-white" />
                       </div>
-                      {'published' in link.stats && link.stats.published !== undefined && (
-                        <div className="flex items-center gap-1 text-sm text-gray-600 mt-1">
-                          <Eye className="h-3 w-3 text-green-600" />
-                          <span className="text-green-600 font-medium">{link.stats.published as number}</span>
-                          <EyeOff className="h-3 w-3 text-gray-400 ml-1" />
-                          <span className="text-gray-500">{link.stats.total - (link.stats.published as number)}</span>
-                        </div>
-                      )}
+                      <div>
+                        <div className="font-semibold text-gray-900">{link.title}</div>
+                        <div className="text-xs text-gray-500">{link.description}</div>
+                      </div>
                     </div>
-                  )}
-                </div>
-                
-                <CardTitle className="text-xl mt-4">{link.title}</CardTitle>
-                <CardDescription className="text-sm">
-                  {link.description}
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent className="relative">
-                <Link href={link.href}>
-                  <Button 
-                    variant="ghost" 
-                    className="w-full justify-between group-hover:bg-white/80 transition-colors"
-                  >
-                    <span>Kelola</span>
-                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          );
-        })}
+                  </td>
+                  <td className="px-3 py-3 text-center font-bold">
+                    {link.stats?.total || '-'}
+                  </td>
+                  <td className="px-3 py-3 text-center font-bold text-green-600">
+                    {link.stats && 'published' in link.stats 
+                      ? (link.stats as { total: number; published: number }).published 
+                      : '-'}
+                  </td>
+                  <td className="px-3 py-3 text-center font-bold text-gray-600">
+                    {link.stats && 'published' in link.stats 
+                      ? (link.stats.total - (link.stats as { total: number; published: number }).published)
+                      : '-'}
+                  </td>
+                  <td className="px-3 py-3 text-center">
+                    <Link href={link.href}>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="text-xs hover:bg-sea-ocean hover:text-white transition-colors"
+                      >
+                        Kelola →
+                      </Button>
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
 
       {/* Quick Tips */}
       <Card className="border-sea-foam/50 bg-gradient-to-br from-sea-foam/10 to-transparent">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-sea-ocean/10 flex items-center justify-center">
-              <TrendingUp className="h-5 w-5 text-sea-ocean" />
+        <CardHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-sea-ocean/10 flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-sea-ocean" />
             </div>
             <div>
-              <CardTitle className="text-lg">Tips</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-sm sm:text-base md:text-lg">Tips</CardTitle>
+              <CardDescription className="text-[10px] sm:text-xs md:text-sm leading-tight">
                 Pastikan konten sudah diposting agar muncul di website
               </CardDescription>
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <ul className="space-y-2 text-sm text-gray-700">
+        <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+          <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-gray-700">
             <li className="flex items-start gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-sea-ocean mt-2"></div>
               <span>Gunakan <Eye className="inline h-3 w-3 text-green-600" /> untuk melihat konten yang sudah tayang</span>
