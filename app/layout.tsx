@@ -1,16 +1,10 @@
-"use client";
-
 import { Geist, Geist_Mono, Parkinsans } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { ChatAssistant } from "@/components/chat-assistant";
-import { StructuredData } from "@/components/structured-data";
-import { usePathname } from "next/navigation";
+import { ClientLayout } from "@/components/client-layout";
+import type { Metadata } from "next";
 import "./globals.css";
 
 // SEO Metadata
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL('https://karangtawulan.vercel.app'),
   title: {
     default: 'Pantai Karangtawulan Tasikmalaya - Wisata Pantai Terbaik Jawa Barat',
@@ -90,28 +84,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith("/dashboard") || pathname?.startsWith("/api/auth");
-
   return (
     <html lang="id" suppressHydrationWarning>
-      <head>
-        <StructuredData />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${parkinsans.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {!isAdminRoute && <Navbar />}
-          <main className="min-h-screen">{children}</main>
-          {!isAdminRoute && <Footer />}
-          {!isAdminRoute && <ChatAssistant />}
-        </ThemeProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
