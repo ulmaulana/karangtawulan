@@ -89,7 +89,7 @@ export default function AccessoriesPage() {
   }, []);
 
   const formatRupiah = (amount: number) => {
-    return "Rp " + new Intl.NumberFormat("id-ID", {
+    return "Rp" + new Intl.NumberFormat("id-ID", {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
@@ -105,11 +105,11 @@ export default function AccessoriesPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Aksesori</h1>
-          <p className="text-gray-600">Aksesori yang bisa disewa</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Aksesori</h1>
+          <p className="text-xs sm:text-sm md:text-base text-gray-600">Aksesori yang bisa disewa</p>
         </div>
         <Button 
           onClick={() => {
@@ -124,66 +124,51 @@ export default function AccessoriesPage() {
             });
             setIsDialogOpen(true);
           }}
-          className="bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-lg"
+          size="sm"
+          className="bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-lg flex-shrink-0"
         >
-          <Plus className="h-4 w-4 mr-2" />
-          Tambah Aksesori
+          <Plus className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+          <span className="hidden sm:inline">Tambah</span>
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Item</CardTitle>
-            <ShoppingBag className="h-4 w-4 text-gray-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{accessories.length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Stok</CardTitle>
-            <Package className="h-4 w-4 text-gray-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {accessories.reduce((sum, acc) => sum + acc.stock, 0)}
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Published</CardTitle>
-            <Eye className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {accessories.filter(a => a.published).length}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="border rounded-lg overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Item</th>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Stok</th>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Tayang</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="px-3 py-2 font-bold">{accessories.length}</td>
+              <td className="px-3 py-2 font-bold">{accessories.reduce((sum, acc) => sum + acc.stock, 0)}</td>
+              <td className="px-3 py-2 font-bold text-green-600">{accessories.filter(a => a.published).length}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Daftar Aksesori</CardTitle>
-          <CardDescription>Semua aksesori yang tersedia untuk disewa</CardDescription>
+        <CardHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg">Daftar Aksesori</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">Semua aksesori yang tersedia untuk disewa</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nama</TableHead>
-                <TableHead>Harga Sewa</TableHead>
-                <TableHead>Stok</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[150px]">Nama</TableHead>
+                  <TableHead className="min-w-[120px]">Harga Sewa</TableHead>
+                  <TableHead className="min-w-[80px]">Stok</TableHead>
+                  <TableHead className="min-w-[80px]">Status</TableHead>
+                  <TableHead className="text-right min-w-[100px]">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
               {accessories.map((acc) => (
                 <TableRow key={acc.id}>
                   <TableCell>
@@ -195,10 +180,7 @@ export default function AccessoriesPage() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1">
-                      <DollarSign className="h-4 w-4 text-gray-400" />
-                      <span className="font-medium">{formatRupiah(acc.priceIdr)}</span>
-                    </div>
+                    <div className="font-medium text-sm">{formatRupiah(acc.priceIdr)}</div>
                   </TableCell>
                   <TableCell>
                     <Badge variant={acc.stock > 5 ? "default" : "destructive"}>
@@ -251,8 +233,9 @@ export default function AccessoriesPage() {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
@@ -265,9 +248,9 @@ export default function AccessoriesPage() {
               {editingAccessory ? "Update informasi aksesori" : "Buat aksesori baru"}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-6 py-4">
             <div>
-              <Label htmlFor="name">Nama *</Label>
+              <Label htmlFor="name" className="mb-2">Nama *</Label>
               <Input
                 id="name"
                 value={formData.name}
@@ -277,7 +260,7 @@ export default function AccessoriesPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="priceIdr">Harga Sewa (IDR) *</Label>
+                <Label htmlFor="priceIdr" className="mb-2">Harga Sewa (IDR) *</Label>
                 <Input
                   id="priceIdr"
                   type="number"
@@ -286,7 +269,7 @@ export default function AccessoriesPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="stock">Stok *</Label>
+                <Label htmlFor="stock" className="mb-2">Stok *</Label>
                 <Input
                   id="stock"
                   type="number"
@@ -296,7 +279,7 @@ export default function AccessoriesPage() {
               </div>
             </div>
             <div>
-              <Label htmlFor="shortDesc">Deskripsi Singkat</Label>
+              <Label htmlFor="shortDesc" className="mb-2">Deskripsi Singkat</Label>
               <Textarea
                 id="shortDesc"
                 value={formData.shortDesc}
