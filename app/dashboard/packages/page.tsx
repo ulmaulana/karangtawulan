@@ -100,7 +100,7 @@ export default function PackagesPage() {
   }, []);
 
   const formatRupiah = (amount: number) => {
-    return "Rp " + new Intl.NumberFormat("id-ID", {
+    return "Rp" + new Intl.NumberFormat("id-ID", {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
@@ -116,12 +116,12 @@ export default function PackagesPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Paket Wisata</h1>
-          <p className="text-gray-600">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Paket Wisata</h1>
+          <p className="text-xs sm:text-sm md:text-base text-gray-600">
             Kelola paket wisata dan harga
           </p>
         </div>
@@ -142,71 +142,56 @@ export default function PackagesPage() {
             });
             setIsDialogOpen(true);
           }}
-          className="bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-lg"
+          size="sm"
+          className="bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-lg flex-shrink-0"
         >
-          <Plus className="h-4 w-4 mr-2" />
-          Tambah Paket
+          <Plus className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+          <span className="hidden sm:inline">Tambah Paket</span>
         </Button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Paket</CardTitle>
-            <PackageIcon className="h-4 w-4 text-gray-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{packages.length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tayang</CardTitle>
-            <Eye className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {packages.filter(p => p.published).length}
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Draft</CardTitle>
-            <EyeOff className="h-4 w-4 text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-600">
-              {packages.filter(p => !p.published).length}
-            </div>
-          </CardContent>
-        </Card>
+      {/* Stats Table */}
+      <div className="border rounded-lg overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Total</th>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Tayang</th>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Draft</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="px-3 py-2 font-bold">{packages.length}</td>
+              <td className="px-3 py-2 font-bold text-green-600">{packages.filter(p => p.published).length}</td>
+              <td className="px-3 py-2 font-bold text-gray-600">{packages.filter(p => !p.published).length}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       {/* Packages Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Daftar Paket</CardTitle>
-          <CardDescription>
+        <CardHeader className="px-6 pt-6 pb-4">
+          <CardTitle className="text-base sm:text-lg">Daftar Paket</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">
             Semua paket wisata yang tersedia
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nama Paket</TableHead>
-                <TableHead>Harga</TableHead>
-                <TableHead>Kapasitas</TableHead>
-                <TableHead>Durasi</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+        <CardContent className="px-6 pb-6">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[150px]">Nama Paket</TableHead>
+                  <TableHead className="min-w-[120px]">Harga</TableHead>
+                  <TableHead className="min-w-[100px]">Kapasitas</TableHead>
+                  <TableHead className="min-w-[80px]">Durasi</TableHead>
+                  <TableHead className="min-w-[80px]">Status</TableHead>
+                  <TableHead className="text-right min-w-[100px]">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
               {packages.map((pkg) => (
                 <TableRow key={pkg.id}>
                   <TableCell>
@@ -217,22 +202,19 @@ export default function PackagesPage() {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <DollarSign className="h-4 w-4 text-gray-400" />
-                      <span className="font-medium">{formatRupiah(pkg.harga)}</span>
-                    </div>
+                  <TableCell className="py-4">
+                    <div className="font-medium text-sm">{formatRupiah(pkg.harga)}</div>
                     <div className="text-xs text-gray-500">
                       DP {pkg.dpPercent}%
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-4">
                     <div className="flex items-center gap-1">
                       <Users className="h-4 w-4 text-gray-400" />
                       <span>{pkg.paxMin}-{pkg.paxMax} orang</span>
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-4">
                     <div className="flex items-center gap-1">
                       <Clock className="h-4 w-4 text-gray-400" />
                       <span>{pkg.durasiJam} jam</span>
@@ -251,7 +233,7 @@ export default function PackagesPage() {
                       </Badge>
                     )}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right py-4">
                     <div className="flex items-center justify-end gap-2">
                       <Button 
                         variant="ghost" 
@@ -288,25 +270,27 @@ export default function PackagesPage() {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
       {/* Empty State */}
       {packages.length === 0 && !isLoading && (
-        <Card className="py-12">
+        <Card className="py-8 sm:py-12">
           <CardContent className="flex flex-col items-center justify-center text-center">
-            <PackageIcon className="h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Belum ada paket wisata</h3>
-            <p className="text-gray-600 mb-6">
+            <PackageIcon className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mb-3 sm:mb-4" />
+            <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2">Belum ada paket wisata</h3>
+            <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
               Mulai dengan menambahkan paket wisata pertama
             </p>
             <Button 
               onClick={() => setIsDialogOpen(true)}
+              size="sm"
               className="bg-gradient-to-r from-sea-ocean to-sea-teal"
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
               Tambah Paket
             </Button>
           </CardContent>
@@ -322,9 +306,9 @@ export default function PackagesPage() {
               {editingPackage ? "Update informasi paket wisata" : "Buat paket wisata baru"}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-6 py-4">
             <div>
-              <Label htmlFor="nama">Nama Paket *</Label>
+              <Label htmlFor="nama" className="mb-2">Nama Paket *</Label>
               <Input
                 id="nama"
                 value={formData.nama}
@@ -334,7 +318,7 @@ export default function PackagesPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="harga">Harga (IDR) *</Label>
+                <Label htmlFor="harga" className="mb-2">Harga (IDR) *</Label>
                 <Input
                   id="harga"
                   type="number"
@@ -343,7 +327,7 @@ export default function PackagesPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="dpPercent">DP (%)</Label>
+                <Label htmlFor="dpPercent" className="mb-2">DP (%)</Label>
                 <Input
                   id="dpPercent"
                   type="number"
@@ -354,7 +338,7 @@ export default function PackagesPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="paxMin">Kapasitas Min</Label>
+                <Label htmlFor="paxMin" className="mb-2">Kapasitas Min</Label>
                 <Input
                   id="paxMin"
                   type="number"
@@ -363,7 +347,7 @@ export default function PackagesPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="paxMax">Kapasitas Max</Label>
+                <Label htmlFor="paxMax" className="mb-2">Kapasitas Max</Label>
                 <Input
                   id="paxMax"
                   type="number"
@@ -373,7 +357,7 @@ export default function PackagesPage() {
               </div>
             </div>
             <div>
-              <Label htmlFor="durasiJam">Durasi (Jam)</Label>
+              <Label htmlFor="durasiJam" className="mb-2">Durasi (Jam)</Label>
               <Input
                 id="durasiJam"
                 type="number"
@@ -382,7 +366,7 @@ export default function PackagesPage() {
               />
             </div>
             <div>
-              <Label htmlFor="facilities">Fasilitas (pisahkan dengan koma)</Label>
+              <Label htmlFor="facilities" className="mb-2">Fasilitas (pisahkan dengan koma)</Label>
               <Textarea
                 id="facilities"
                 value={formData.facilities}
@@ -392,7 +376,7 @@ export default function PackagesPage() {
               />
             </div>
             <div>
-              <Label htmlFor="notes">Catatan</Label>
+              <Label htmlFor="notes" className="mb-2">Catatan</Label>
               <Textarea
                 id="notes"
                 value={formData.notes}
