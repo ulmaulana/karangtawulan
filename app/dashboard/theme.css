@@ -103,3 +103,26 @@ body {
       @apply !rounded-none !shadow-none;
     }
   }
+
+  /* Dashboard Form & Table Spacing Improvements */
+  
+  /* Add spacing between form fields */
+  .space-y-4 > div:not(:last-child) {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* Label spacing from input */
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Card content padding for tables */
+  [data-slot="card"] {
+    padding: 1.5rem;
+  }
+  
+  /* Table row spacing */
+  tbody tr {
+    height: 3.5rem;
+  }

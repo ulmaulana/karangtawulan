@@ -40,7 +40,7 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-sea-foam/20 via-white to-sea-ocean/10">
       <AdminSidebar />
-      <main className="flex-1 md:ml-64 p-8">
+      <main className="flex-1 md:ml-64 p-4 pt-16 sm:p-6 md:p-8 md:pt-8">
         <div className="max-w-7xl mx-auto">
           {children}
         </div>
