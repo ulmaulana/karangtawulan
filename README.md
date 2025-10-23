@@ -21,7 +21,7 @@ Aplikasi web modern untuk pengelolaan wisata Karangtawulan, dibangun dengan Next
 - **Backend Services:** [Supabase](https://supabase.com/)
 
 ### AI & Features
-- **AI Integration:** Google Generative AI (Gemini)
+- **AI Integration:** OpenRouter DeepSeek v3.1
 - **Drag & Drop:** @dnd-kit
 - **Data Tables:** @tanstack/react-table
 - **Charts:** Recharts
@@ -39,7 +39,7 @@ Aplikasi web modern untuk pengelolaan wisata Karangtawulan, dibangun dengan Next
 Before you begin, ensure you have the following:
 - Node.js 18+ installed
 - Docker and Docker Compose (for database setup)
-- Google Gemini API Key (untuk AI chat assistant)
+- OpenRouter API Key (gratis dari https://openrouter.ai/settings/keys)
 - Supabase account (untuk storage dan database)
 
 ## Getting Started
@@ -125,8 +125,9 @@ NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-# AI Configuration
-GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key
+# AI Configuration - OpenRouter DeepSeek
+OPENROUTER_API_KEY=sk-or-v1-your_api_key_here
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 ## Features
@@ -143,7 +144,7 @@ GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key
 - 🏨 **Akomodasi** - Pengelolaan dan booking akomodasi
 - 📦 **Paket Wisata** - Katalog paket wisata
 - 🖼️ **Galeri** - Photo gallery dengan lightbox
-- 💬 **AI Chat Assistant** - Chatbot dengan Google Gemini
+- 💬 **AI Chat Assistant** - Chatbot dengan OpenRouter DeepSeek v3.1
 - 👤 **User Dashboard** - Profile dan booking management
 
 ### Admin Panel
@@ -159,7 +160,7 @@ GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key
 - 🎯 **Type Safety** - Full TypeScript dengan Zod validation
 - 🔒 **Secure** - Environment variables, secure auth patterns
 - 🐳 **Docker** - Multi-stage builds, production-ready
-- 🤖 **AI Integration** - Google Gemini untuk AI chat assistant
+- 🤖 **AI Integration** - OpenRouter DeepSeek v3.1 (Free, No Limit)
 - 📝 **Form Management** - React Hook Form dengan validation
 - 🎭 **Animations** - Framer Motion untuk smooth transitions
 - 🎨 **Modern UI** - Duna Ocean Theme, minimalist design
@@ -397,26 +398,26 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 ## AI Chat Assistant
 
-Aplikasi dilengkapi dengan AI chat assistant menggunakan Google Gemini AI:
+Aplikasi dilengkapi dengan AI chat assistant menggunakan OpenRouter DeepSeek v3.1:
 
 ### Setup
-1. Dapatkan API key dari [Google AI Studio](https://makersuite.google.com/app/apikey)
+1. Dapatkan API key gratis dari [OpenRouter](https://openrouter.ai/settings/keys)
 2. Tambahkan ke `.env`:
    ```env
-   GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key_here
+   OPENROUTER_API_KEY=sk-or-v1-your_api_key_here
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
    ```
 
 ### Features
-- ✨ **Streaming responses** - Real-time response generation
+- 🎯 **Smart responses** - Powered by DeepSeek v3.1
 - 💭 **Conversation history** - Context-aware chat dengan memory
-- 🎯 **Smart responses** - Powered by Gemini 1.5 Pro
-- ⚡ **Fast & reliable** - Direct API integration
-- 🛡️ **Error handling** - Graceful error management
+- 🗄️ **Database-driven** - Realtime data dari Supabase (packages, accommodations, destinations)
+- ♾️ **Unlimited Free** - No quota limit, no rate limit
+- ⚡ **Fast & reliable** - Direct API integration via OpenRouter
 
 ### Usage
 - Chat endpoint: `/api/chat`
 - Component: `<ChatAssistant />` di `components/chat-assistant.tsx`
-- Akses dari icon chat di navbar
 
 ## Documentation
 
