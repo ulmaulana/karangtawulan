@@ -56,7 +56,7 @@ export default function GalleryPage() {
     category: "",
     credit: "",
     takenAt: "",
-    published: false,
+    published: true,
   });
 
   const fetchImages = async () => {
@@ -94,11 +94,11 @@ export default function GalleryPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Galeri</h1>
-          <p className="text-gray-600">Foto dan media gallery</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Galeri</h1>
+          <p className="text-xs sm:text-sm md:text-base text-gray-600">Foto dan media gallery</p>
         </div>
         <Button 
           onClick={() => {
@@ -108,59 +108,43 @@ export default function GalleryPage() {
               category: "",
               credit: "",
               takenAt: "",
-              published: false,
+              published: true,
             });
             setSelectedFile(null);
             setPreviewUrl(null);
             setIsDialogOpen(true);
           }}
-          className="bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-lg"
+          size="sm"
+          className="bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-lg flex-shrink-0"
         >
-          <Upload className="h-4 w-4 mr-2" />
-          Upload Foto
+          <Upload className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+          <span className="hidden sm:inline">Upload</span>
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Foto</CardTitle>
-            <ImageIcon className="h-4 w-4 text-gray-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{images.length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tayang</CardTitle>
-            <Eye className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {images.filter(i => i.published).length}
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Draft</CardTitle>
-            <EyeOff className="h-4 w-4 text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-600">
-              {images.filter(i => !i.published).length}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="border rounded-lg overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Total</th>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Tayang</th>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Draft</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="px-3 py-2 font-bold">{images.length}</td>
+              <td className="px-3 py-2 font-bold text-green-600">{images.filter(i => i.published).length}</td>
+              <td className="px-3 py-2 font-bold text-gray-600">{images.filter(i => !i.published).length}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Gallery Images</CardTitle>
-          <CardDescription>Klik foto untuk edit atau hapus</CardDescription>
+        <CardHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg">Gallery Images</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">Klik foto untuk edit atau hapus</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -227,7 +211,7 @@ export default function GalleryPage() {
                   category: "",
                   credit: "",
                   takenAt: "",
-                  published: false,
+                  published: true,
                 });
                 setSelectedFile(null);
                 setPreviewUrl(null);
@@ -251,9 +235,9 @@ export default function GalleryPage() {
               {editingImage ? "Update informasi foto" : "Upload foto baru ke galeri"}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-6 py-4">
             <div>
-              <Label htmlFor="image">Upload Foto *</Label>
+              <Label htmlFor="image" className="mb-2">Upload Foto *</Label>
               <div className="mt-2">
                 {previewUrl || (editingImage && formData.url) ? (
                   <div className="relative aspect-video w-full rounded-lg overflow-hidden bg-gray-100 mb-3">
@@ -301,7 +285,7 @@ export default function GalleryPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="category">Kategori *</Label>
+                <Label htmlFor="category" className="mb-2">Kategori *</Label>
                 <Select
                   value={formData.category}
                   onValueChange={(value) => setFormData({ ...formData, category: value })}
@@ -318,7 +302,7 @@ export default function GalleryPage() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="credit">Credit</Label>
+                <Label htmlFor="credit" className="mb-2">Credit</Label>
                 <Input
                   id="credit"
                   value={formData.credit}
@@ -328,7 +312,7 @@ export default function GalleryPage() {
               </div>
             </div>
             <div>
-              <Label htmlFor="takenAt">Tanggal Pengambilan</Label>
+              <Label htmlFor="takenAt" className="mb-2">Tanggal Pengambilan</Label>
               <Input
                 id="takenAt"
                 type="date"
