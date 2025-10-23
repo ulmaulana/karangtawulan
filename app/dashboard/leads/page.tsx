@@ -92,18 +92,18 @@ export default function LeadsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Form Submissions</h1>
-          <p className="text-gray-600">Leads dari pengunjung website</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Form Submissions</h1>
+          <p className="text-xs sm:text-sm md:text-base text-gray-600">Leads dari pengunjung website</p>
         </div>
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-gray-600" />
+          <Filter className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-600" />
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sea-ocean"
+            className="px-2 py-1.5 sm:px-3 sm:py-2 border border-gray-300 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sea-ocean"
           >
             <option value="all">Semua</option>
             <option value="booking">Booking</option>
@@ -114,38 +114,44 @@ export default function LeadsPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
-        {Object.entries(kindLabels).map(([kind, label]) => (
-          <Card key={kind}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{label}</CardTitle>
-              <MessageSquare className="h-4 w-4 text-gray-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {leads.filter(l => l.kind === kind).length}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="border rounded-lg overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              {Object.entries(kindLabels).map(([kind, label]) => (
+                <th key={kind} className="px-3 py-2 text-left font-medium text-gray-600">{label}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {Object.keys(kindLabels).map((kind) => (
+                <td key={kind} className="px-3 py-2 font-bold">
+                  {leads.filter(l => l.kind === kind).length}
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Recent Leads</CardTitle>
-          <CardDescription>{filteredLeads.length} submissions</CardDescription>
+        <CardHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg">Recent Leads</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">{filteredLeads.length} submissions</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Waktu</TableHead>
-                <TableHead>Tipe</TableHead>
-                <TableHead>Detail</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[120px]">Waktu</TableHead>
+                  <TableHead className="min-w-[100px]">Tipe</TableHead>
+                  <TableHead className="min-w-[150px]">Detail</TableHead>
+                  <TableHead className="text-right min-w-[100px]">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
               {filteredLeads.map((lead) => (
                 <TableRow key={lead.id}>
                   <TableCell className="text-sm text-gray-600">
@@ -184,8 +190,9 @@ export default function LeadsPage() {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
