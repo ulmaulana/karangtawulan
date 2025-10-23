@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Pencil, Trash2, Save, X, MapPin, Clock } from "lucide-react";
+import { Plus, Pencil, Trash2, Save, X, MapPin, Clock, Upload, Image as ImageIcon } from "lucide-react";
 import type { Destination } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -39,6 +39,8 @@ export default function AdminDestinasiPage() {
     sort_order: 0,
   });
   const [highlightsInput, setHighlightsInput] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
     loadDestinations();
@@ -85,6 +87,7 @@ export default function AdminDestinasiPage() {
     setEditingId(destination.id);
     setFormData(destination);
     setHighlightsInput(destination.highlights?.join("\n") || "");
+    setImagePreview(null); // Reset preview, akan pakai photo_url existing
   };
 
   const handleCancel = () => {
@@ -101,6 +104,76 @@ export default function AdminDestinasiPage() {
       sort_order: 0,
     });
     setHighlightsInput("");
+    setImagePreview(null);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Error",
+        description: "Ukuran file maksimal 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast({
+        title: "Error",
+        description: "File harus berupa gambar",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setUploading(true);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+
+      // Upload to Supabase Storage
+      const formDataUpload = new FormData();
+      formDataUpload.append("file", file);
+      formDataUpload.append("bucket", "destinations");
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formDataUpload,
+      });
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const { url } = await response.json();
+      
+      setFormData({ ...formData, photo_url: url });
+      
+      toast({
+        title: "Berhasil!",
+        description: "Foto berhasil diupload",
+      });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast({
+        title: "Error",
+        description: "Gagal mengupload foto. Silakan coba lagi.",
+        variant: "destructive",
+      });
+      setImagePreview(null);
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSave = async () => {
@@ -223,10 +296,10 @@ export default function AdminDestinasiPage() {
             </Button>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             {/* Name */}
             <div>
-              <Label htmlFor="name">Nama Destinasi *</Label>
+              <Label htmlFor="name" className="mb-2">Nama Destinasi *</Label>
               <Input
                 id="name"
                 value={formData.name}
@@ -239,7 +312,7 @@ export default function AdminDestinasiPage() {
 
             {/* Description */}
             <div>
-              <Label htmlFor="description">Deskripsi *</Label>
+              <Label htmlFor="description" className="mb-2">Deskripsi *</Label>
               <Textarea
                 id="description"
                 value={formData.description}
@@ -254,7 +327,7 @@ export default function AdminDestinasiPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Distance */}
               <div>
-                <Label htmlFor="distance">Jarak dari Karangtawulan</Label>
+                <Label htmlFor="distance" className="mb-2">Jarak dari Karangtawulan</Label>
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-gray-400" />
                   <Input
@@ -273,7 +346,7 @@ export default function AdminDestinasiPage() {
 
               {/* Travel Time */}
               <div>
-                <Label htmlFor="travelTime">Waktu Tempuh</Label>
+                <Label htmlFor="travelTime" className="mb-2">Waktu Tempuh</Label>
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-gray-400" />
                   <Input
@@ -290,7 +363,7 @@ export default function AdminDestinasiPage() {
 
             {/* Highlights */}
             <div>
-              <Label htmlFor="highlights">Aktivitas & Daya Tarik</Label>
+              <Label htmlFor="highlights" className="mb-2">Aktivitas & Daya Tarik</Label>
               <Textarea
                 id="highlights"
                 value={highlightsInput}
@@ -303,17 +376,67 @@ export default function AdminDestinasiPage() {
               </p>
             </div>
 
-            {/* Photo URL */}
+            {/* Photo Upload */}
             <div>
-              <Label htmlFor="photoUrl">URL Foto</Label>
-              <Input
-                id="photoUrl"
-                value={formData.photo_url || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, photo_url: e.target.value })
-                }
-                placeholder="https://example.com/image.jpg"
-              />
+              <Label htmlFor="photo" className="mb-2">Foto Destinasi *</Label>
+              <div className="space-y-3">
+                {/* Preview */}
+                {(imagePreview || formData.photo_url) && (
+                  <div className="relative w-full h-48 rounded-lg overflow-hidden border-2 border-gray-200">
+                    <img
+                      src={imagePreview || formData.photo_url}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="destructive"
+                      className="absolute top-2 right-2"
+                      onClick={() => {
+                        setImagePreview(null);
+                        setFormData({ ...formData, photo_url: "" });
+                      }}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+
+                {/* Upload Button */}
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="photo"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={uploading}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => document.getElementById("photo")?.click()}
+                    disabled={uploading}
+                  >
+                    {uploading ? (
+                      <>
+                        <div className="animate-spin h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full" />
+                        Mengupload...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="h-4 w-4 mr-2" />
+                        {imagePreview || formData.photo_url ? "Ganti Foto" : "Upload Foto"}
+                      </>
+                    )}
+                  </Button>
+                </div>
+                <p className="text-xs text-gray-500">
+                  Format: JPG, PNG, WebP. Maks 5MB. Rekomendasi: 1200x800px
+                </p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
