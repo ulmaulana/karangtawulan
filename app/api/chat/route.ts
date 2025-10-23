@@ -254,11 +254,11 @@ Jika tidak tahu, arahkan ke admin: 6282218738881`,
       content: message,
     });
 
-    console.log("Sending request to OpenRouter DeepSeek...");
+    console.log("Sending request to OpenRouter ChatGPT OSS...");
 
-    // Call OpenRouter API with DeepSeek v3.1 free
+    // Call OpenRouter API with ChatGPT OSS 20B free
     const completion = await openai.chat.completions.create({
-      model: "deepseek/deepseek-chat-v3.1:free",
+      model: "openai/gpt-oss-20b:free",
       messages: messages,
       temperature: 0.3, // Lower temperature = more factual, less creative/hallucination
       max_tokens: 1500,
@@ -271,7 +271,7 @@ Jika tidak tahu, arahkan ke admin: 6282218738881`,
       throw new Error("No response from AI");
     }
 
-    console.log("✓ Success with DeepSeek v3.1");
+    console.log("✓ Success with ChatGPT OSS 20B");
 
     return NextResponse.json({
       message: response,
