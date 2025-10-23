@@ -74,7 +74,7 @@ export default function PackagesPage() {
     facilities: "" as string,
     notes: "",
     dpPercent: 50,
-    published: false,
+    published: true,
     sortOrder: 0,
   });
 
@@ -137,7 +137,7 @@ export default function PackagesPage() {
               facilities: "",
               notes: "",
               dpPercent: 50,
-              published: false,
+              published: true,
               sortOrder: 0,
             });
             setIsDialogOpen(true);

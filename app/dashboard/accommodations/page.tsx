@@ -84,7 +84,7 @@ export default function AccommodationsPage() {
     contact: "",
     photoUrl: "",
     rules: "",
-    published: false,
+    published: true,
   });
 
   const fetchAccommodations = async () => {
@@ -143,7 +143,7 @@ export default function AccommodationsPage() {
               contact: "",
               photoUrl: "",
               rules: "",
-              published: false,
+              published: true,
             });
             setIsDialogOpen(true);
           }}
