@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const path = formData.get('path') as string;
+    const bucket = (formData.get('bucket') as string) || 'gallery-images'; // Default to gallery-images
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -36,10 +37,15 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
+    // Generate unique filename if path not provided
+    const timestamp = Date.now();
+    const extension = file.name.split('.').pop();
+    const filename = path || `${timestamp}-${Math.random().toString(36).substring(7)}.${extension}`;
+
     // Upload to Supabase Storage
     const { data, error } = await supabase.storage
-      .from('gallery-images')
-      .upload(path, buffer, {
+      .from(bucket)
+      .upload(filename, buffer, {
         contentType: file.type,
         upsert: false,
       });
@@ -51,7 +57,7 @@ export async function POST(request: NextRequest) {
 
     // Get public URL
     const { data: { publicUrl } } = supabase.storage
-      .from('gallery-images')
+      .from(bucket)
       .getPublicUrl(data.path);
 
     return NextResponse.json({ url: publicUrl }, { status: 200 });

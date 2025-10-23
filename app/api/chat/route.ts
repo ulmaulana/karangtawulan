@@ -1,9 +1,16 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from "openai";
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { formatRupiah } from "@/lib/whatsapp";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const openai = new OpenAI({
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY!,
+  defaultHeaders: {
+    "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+    "X-Title": "Karangtawulan Assistant",
+  },
+});
 
 // Fetch real-time data from database
 async function getLatestData() {
@@ -29,6 +36,13 @@ async function getLatestData() {
       .eq("published", true)
       .order("sort_order", { ascending: true });
 
+    // Fetch destinations
+    const { data: destinations } = await supabase
+      .from("destinations")
+      .select("*")
+      .eq("published", true)
+      .order("created_at", { ascending: false });
+
     // Fetch gallery (for activity info)
     const { data: gallery } = await supabase
       .from("gallery")
@@ -36,16 +50,21 @@ async function getLatestData() {
       .eq("published", true)
       .limit(10);
 
-    return { packages, accommodations, accessories, gallery };
+    return { packages, accommodations, accessories, destinations, gallery };
   } catch (error) {
     console.error("Error fetching data:", error);
-    return { packages: [], accommodations: [], accessories: [], gallery: [] };
+    return { packages: [], accommodations: [], accessories: [], destinations: [], gallery: [] };
   }
 }
 
 // Generate dynamic system prompt with real data
 async function generateSystemPrompt() {
-  const { packages, accommodations, accessories, gallery } = await getLatestData();
+  const { packages, accommodations, accessories, destinations, gallery } = await getLatestData();
+
+  console.log("🎫 Packages count:", packages?.length || 0);
+  console.log("🏕️ Accommodations count:", accommodations?.length || 0);
+  console.log("🎒 Accessories count:", accessories?.length || 0);
+  console.log("🗺️ Destinations count:", destinations?.length || 0);
 
   // Format packages
   const packagesInfo = packages && packages.length > 0
@@ -56,11 +75,28 @@ async function generateSystemPrompt() {
     : "Belum ada paket yang tersedia";
 
   // Format accommodations
+  console.log("📋 Accommodations data:", JSON.stringify(accommodations, null, 2));
+  
   const accommodationsInfo = accommodations && accommodations.length > 0
-    ? accommodations.map((acc) => 
-        `- ${acc.name} (${acc.type}): Mulai ${formatRupiah(acc.price_from_idr)}/malam${acc.distance_km ? `, ${acc.distance_km} km dari pantai` : ""}`
-      ).join("\n")
-    : "Belum ada akomodasi yang tersedia";
+    ? accommodations.map((acc) => {
+        // Handle different price field names
+        const price = acc.price_from_idr || acc.priceFromIdr || acc.price || 0;
+        let info = `- ${acc.name} (${acc.type}): ${formatRupiah(price)}`;
+        
+        // Add per night/per person context
+        if (acc.type === 'camping') {
+          info += '/orang';
+        } else {
+          info += '/malam';
+        }
+        
+        if (acc.distance_km) info += `, jarak ${acc.distance_km} km dari pantai`;
+        if (acc.facilities && Array.isArray(acc.facilities) && acc.facilities.length > 0) {
+          info += `. Fasilitas: ${acc.facilities.join(", ")}`;
+        }
+        return info;
+      }).join("\n")
+    : "Belum ada akomodasi yang tersedia. Hubungi admin untuk info penginapan.";
 
   // Format accessories
   const accessoriesInfo = accessories && accessories.length > 0
@@ -69,140 +105,108 @@ async function generateSystemPrompt() {
       ).join("\n")
     : "Belum ada aksesori yang tersedia";
 
+  // Format destinations
+  const destinationsInfo = destinations && destinations.length > 0
+    ? destinations.map((dest) => {
+        let info = `- ${dest.name}: ${dest.description}`;
+        if (dest.distance_from_karangtawulan || dest.travel_time) {
+          const details = [];
+          if (dest.distance_from_karangtawulan) details.push(`jarak ${dest.distance_from_karangtawulan}`);
+          if (dest.travel_time) details.push(`${dest.travel_time}`);
+          info += ` (${details.join(", ")})`;
+        }
+        if (dest.highlights && Array.isArray(dest.highlights) && dest.highlights.length > 0) {
+          info += `. Aktivitas: ${dest.highlights.join(", ")}`;
+        }
+        return info;
+      }).join("\n")
+    : "Belum ada destinasi yang tersedia";
+
   // Format gallery/activities
   const activitiesInfo = gallery && gallery.length > 0
     ? [...new Set(gallery.map(g => g.category))].join(", ")
     : "sunset, sunrise, aktivitas pantai";
 
-  return `Kamu adalah Asisten Karangtawulan, asisten virtual yang membantu pengunjung mendapatkan informasi tentang Pantai Karangtawulan di Tasikmalaya.
+  return `Kamu adalah Asisten Karangtawulan yang membantu pengunjung. Jawab dengan ramah dalam Bahasa Indonesia.
 
-PENTING - Ketika Menjawab Pertanyaan Berikut, Gunakan Format Ini:
+⚠️ ATURAN WAJIB - BACA INI DULU:
+1. HANYA gunakan informasi dari data di bawah ini
+2. JANGAN gunakan pengetahuan umum atau informasi dari internet
+3. JANGAN mengarang atau membuat informasi baru
+4. Jika ditanya sesuatu yang tidak ada di data, katakan: "Untuk informasi ini, silakan hubungi admin di 6282218738881"
+5. Semua harga, fasilitas, dan detail HARUS sesuai 100% dengan data yang diberikan
+6. JANGAN menyebutkan tempat/hotel/destinasi yang tidak ada di daftar
+7. Jika data kosong (misal: "Belum ada akomodasi"), katakan dengan jujur
 
-1. **Rekomendasi Paket**: 
-   - Tampilkan 2-3 paket terbaik dengan harga dan fasilitas
-   - Jelaskan perbedaan utama dan siapa yang cocok untuk masing-masing paket
-   - Akhiri dengan: "Untuk booking, hubungi admin WhatsApp di 6282218738881"
-
-2. **Kontak Admin**: 
-   - Berikan nomor WhatsApp: 6282218738881
-   - Jelaskan kapan waktu terbaik untuk menghubungi (jam operasional)
-   - Sebutkan apa yang perlu disiapkan saat menghubungi (tanggal kunjungan, jumlah peserta)
-
-3. **Sosial Media KarangTawulan**: 
-   - Instagram: @karangtawulanofficial
-   - TikTok: @karangtawulanofficial
-   - YouTube: PantaiKarangTawulanOfficial
-   - Ajak untuk follow dan tag saat berkunjung
-
-4. **Harga Tiket Masuk**: 
-   - PENTING: Rp 15.000 dan Rp 30.000 adalah TIKET MASUK, bukan tiket parkir
-   - Motor: Rp 15.000 (tiket masuk)
-   - Mobil: Rp 30.000 (tiket masuk)
-   - Jelaskan fasilitas yang didapat: akses pantai seharian, spot foto, toilet, mushola
-   - JANGAN sebutkan sebagai "tiket parkir"
-
-5. **Akomodasi**: 
-   - Tampilkan 2-3 pilihan akomodasi terdekat dengan harga
-   - Jelaskan jarak dari pantai dan fasilitas utama
-   - Rekomendasikan berdasarkan budget (ekonomis/mid-range/premium)
-
-6. **Destinasi**: 
-   - Sebutkan destinasi wisata terdekat dari Karangtawulan
-   - Jelaskan jarak tempuh dan keunikan masing-masing
-   - Rekomendasi untuk one-day trip atau multi-destination
-
-Aturan Penting:
-- Jawab dalam Bahasa Indonesia yang ramah, informatif, dan personal
-- Maksimal 4-5 kalimat untuk pertanyaan umum, boleh lebih panjang untuk rekomendasi paket/akomodasi
-- Gunakan bullet points (-) untuk list
-- JANGAN gunakan format markdown untuk link (seperti [text](url))
-- Selalu sebutkan nomor WhatsApp dalam format plain text: 6282218738881
-- Fokus pada value dan manfaat, bukan hanya informasi kering
-
-Informasi Kontak & Sosial Media:
+=== KONTAK & INFO PENTING ===
 - WhatsApp Admin: 6282218738881
-- Instagram: @karangtawulanofficial
-- TikTok: @karangtawulanofficial
-- YouTube: PantaiKarangTawulanOfficial
-- Jam Operasional: Setiap hari, 06:00 - 18:00 WIB
-
-Informasi Dasar:
+- Instagram: @karangtawulanofficial | TikTok: @karangtawulanofficial | YouTube: PantaiKarangTawulanOfficial
 - Lokasi: Pantai Karangtawulan, Tasikmalaya, Jawa Barat
-- Harga Tiket Masuk: Motor Rp 15.000 | Mobil Rp 30.000
-- Terkenal dengan: Sunset dan sunrise yang memukau, spot foto instagramable
+- Jam Operasional: 06:00-18:00 WIB
+- Tiket Masuk: Motor Rp 15.000 | Mobil Rp 30.000
 - DP Booking: 50% dari total harga paket
-- Musim Terbaik: April - Oktober untuk cuaca optimal
-- Destinasi Terdekat: Pantai Cimedang, Kampung Naga, Situ Gede, Gunung Galunggung
 
-=== DATA TERBARU DARI DATABASE ===
+=== DATA PAKET & LAYANAN ===
 
-PAKET WISATA TERSEDIA:
+PAKET WISATA:
 ${packagesInfo}
 
-AKOMODASI TERSEDIA:
+AKOMODASI:
 ${accommodationsInfo}
 
-AKSESORI & RENTAL TERSEDIA:
+DESTINASI WISATA:
+${destinationsInfo}
+
+AKSESORI:
 ${accessoriesInfo}
 
-AKTIVITAS & KATEGORI FOTO:
+AKTIVITAS:
 ${activitiesInfo}
 
-=== CONTOH RESPONS YANG BAIK ===
+=== PANDUAN JAWABAN ===
 
-Untuk "Rekomendasi Paket":
-"Berikut 3 paket terbaik kami:
+**Rekomendasi Paket**: 
+FORMAT WAJIB:
+- **Nama Paket** (harga, pax, durasi): Fasilitas ditulis dalam 1 paragraf, dipisah koma. Cocok untuk siapa.
 
-- **Paket 100K** (1-2 orang, 3 jam): Cocok untuk solo/couple yang ingin foto & dokumentasi. Sudah include jasa foto/video + editing.
+CONTOH YANG BENAR:
+- **Paket 100K** (Rp 100.000, 1-10 orang, 3 jam): Tiket masuk, guide lokal, spot foto terbaik, dokumentasi HP. Cocok untuk solo traveler atau grup kecil.
 
-- **Paket 190K** (1-5 orang, 4 jam): Paling populer! Untuk keluarga/rombongan kecil. Include guide, dokumentasi, dan snorkeling gear.
+JANGAN seperti ini (SALAH):
+- Paket 100K
+  - Tiket masuk
+  - Guide lokal
+  (Ini format yang SALAH, jangan dipakai!)
 
-- **Paket 250K** (1-5 orang, 6 jam): Paket premium all-day. Cocok untuk yang mau explore maksimal dengan fasilitas terlengkap.
+Akhiri dengan: "Untuk booking, hubungi admin di **6282218738881**. DP 50%!"
 
-Untuk booking, hubungi admin WhatsApp di 6282218738881. DP 50% ya!"
+**Kontak Admin**: Admin bisa dihubungi di **6282218738881**, jam operasional 06:00-18:00 WIB. Siapkan info: tanggal kunjungan, jumlah peserta, paket yang diminati.
 
-Untuk "Kontak Admin":
-"Admin Karangtawulan bisa dihubungi via WhatsApp di 6282218738881. Jam operasional 06:00-18:00 WIB setiap hari.
+**Sosial Media**: Instagram @karangtawulanofficial, TikTok @karangtawulanofficial, YouTube PantaiKarangTawulanOfficial. Ajak follow dan tag saat berkunjung.
 
-Saat menghubungi, siapkan info: tanggal kunjungan, jumlah peserta, dan paket yang diminati. Admin akan fast respon kok!"
+**Harga Tiket**: Motor Rp 15.000, Mobil Rp 30.000 (tiket masuk, bukan parkir). Dapat akses pantai seharian, spot foto, toilet, mushola.
 
-Untuk "Sosial Media KarangTawulan":
-"Follow sosial media kami untuk update spot foto terbaru dan promo:
+**Akomodasi**: 
+- WAJIB sebutkan SEMUA akomodasi yang ada di daftar AKOMODASI di atas (vila, penginapan, camping)
+- Format: Nama (tipe): harga/satuan, jarak, fasilitas dalam 1 paragraf
+- Camping termasuk akomodasi! Jangan skip!
+- Contoh jawaban yang benar:
+  "Ada beberapa pilihan akomodasi:
+  - Camping Ground Karangtawulan (camping): Rp 30.000/orang. Fasilitas: tenda, matras, toilet bersih.
+  - Vila Pantai (vila): Rp 500.000/malam, jarak 2 km dari pantai. Fasilitas: AC, WiFi, dapur."
+- Jika daftar kosong, katakan "Belum ada data akomodasi di sistem. Hubungi admin di 6282218738881 untuk info penginapan."
 
-- Instagram: @karangtawulanofficial
-- TikTok: @karangtawulanofficial  
-- YouTube: PantaiKarangTawulanOfficial
+**Destinasi**: Sebutkan HANYA destinasi dari daftar di atas. Jika daftar kosong, katakan "Belum ada data destinasi. Hubungi admin untuk rekomendasi."
 
-Jangan lupa tag kami pas upload foto di pantai ya!"
+**Pertanyaan di Luar Data**: Jika ditanya hal yang tidak ada di data (misal: cuaca, kondisi jalan, dll), arahkan ke admin: "Untuk info terkini, hubungi admin di 6282218738881"
 
-Untuk "Harga Tiket":
-"Harga **tiket masuk** Pantai Karangtawulan:
-
-- **Motor: Rp 15.000** (tiket masuk)
-- **Mobil: Rp 30.000** (tiket masuk)
-
-Dengan tiket masuk ini kamu udah bisa menikmati pantai seharian, akses ke spot foto keren, dan fasilitas umum seperti toilet & mushola.
-
-*Catatan: Ini harga tiket masuk ke area pantai, bukan biaya parkir ya."
-
-Untuk "Akomodasi":
-"Ada beberapa pilihan akomodasi dekat Karangtawulan:
-
-- **Vila Premium** (Rp 500K-1jt/malam): Jarak 2-3 km, fasilitas lengkap, view bagus
-- **Penginapan Backpacker** (Rp 150K-300K/malam): Jarak 5 km, budget-friendly
-- **Camping Ground** (Rp 50K-100K/malam): Di area pantai, pengalaman unik!
-
-Mau booking akomodasi? Hubungi admin di 6282218738881 untuk rekomendasi terbaik."
-
-Untuk "Destinasi":
-"Destinasi wisata terdekat dari Karangtawulan:
-
-- **Pantai Cimedang** (5 km, 15 menit): Pantai pasir putih dengan ombak tenang
-- **Kampung Naga** (25 km, 45 menit): Desa adat tradisional Sunda yang unik
-- **Situ Gede** (20 km, 30 menit): Danau alami dengan pemandangan pegunungan
-- **Gunung Galunggung** (30 km, 1 jam): Trekking ke kawah dengan view spektakuler
-
-Cocok banget buat one-day trip gabungin 2-3 destinasi!"
+=== ATURAN FORMAT ===
+- Gunakan bullet points (-) HANYA untuk setiap item utama (paket, akomodasi, destinasi)
+- JANGAN buat nested bullet points atau sub-items
+- Fasilitas/detail ditulis dalam 1 paragraf, dipisah koma
+- Format bold: **text**
+- Nomor WA plain text: 6282218738881 (JANGAN pakai format [text](url))
+- Fokus pada value dan manfaat
 `;
 }
 
@@ -220,19 +224,54 @@ export async function POST(request: NextRequest) {
     // Generate dynamic system prompt with latest data
     const systemPrompt = await generateSystemPrompt();
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+    // Build messages array with context
+    const messages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
+      {
+        role: "system",
+        content: `${systemPrompt}
 
-    const chat = model.startChat({
-      history: context || [],
-      generationConfig: {
-        maxOutputTokens: 800,
-        temperature: 0.7,
+PENTING: Kamu adalah database assistant. Jawab HANYA dari data yang diberikan di atas. 
+JANGAN tambahkan informasi dari pengetahuan umummu. 
+Jika tidak tahu, arahkan ke admin: 6282218738881`,
       },
+    ];
+
+    // Add conversation context if exists
+    if (context && Array.isArray(context)) {
+      for (const msg of context) {
+        if (msg.role && msg.content) {
+          messages.push({
+            role: msg.role as "user" | "assistant",
+            content: msg.content,
+          });
+        }
+      }
+    }
+
+    // Add current user message
+    messages.push({
+      role: "user",
+      content: message,
     });
 
-    const fullPrompt = `${systemPrompt}\n\nPengunjung: ${message}`;
-    const result = await chat.sendMessage(fullPrompt);
-    const response = result.response.text();
+    console.log("Sending request to OpenRouter DeepSeek...");
+
+    // Call OpenRouter API with DeepSeek v3.1 free
+    const completion = await openai.chat.completions.create({
+      model: "deepseek/deepseek-chat-v3.1:free",
+      messages: messages,
+      temperature: 0.3, // Lower temperature = more factual, less creative/hallucination
+      max_tokens: 1500,
+      top_p: 0.9, // Focus on most likely tokens
+    });
+
+    const response = completion.choices[0]?.message?.content;
+
+    if (!response) {
+      throw new Error("No response from AI");
+    }
+
+    console.log("✓ Success with DeepSeek v3.1");
 
     return NextResponse.json({
       message: response,
@@ -240,8 +279,30 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: unknown) {
     console.error("Chat error:", error);
+    
+    // Extract detailed error info
+    let errorMessage = "Unknown error";
+    let errorDetails = "";
+    
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      errorDetails = error.stack || "";
+      
+      // Check for specific Gemini API errors
+      if (errorMessage.includes("overloaded")) {
+        errorMessage = "Model sedang sibuk, coba lagi dalam beberapa detik";
+      } else if (errorMessage.includes("API key")) {
+        errorMessage = "API key tidak valid";
+      } else if (errorMessage.includes("model")) {
+        errorMessage = "Model tidak tersedia, menggunakan fallback";
+      }
+    }
+    
+    console.error("Error details:", errorMessage);
+    console.error("Full error:", errorDetails);
+    
     return NextResponse.json(
-      { error: "Failed to process chat", details: (error as Error).message },
+      { error: "Failed to process chat", details: errorMessage },
       { status: 500 }
     );
   }
