@@ -109,7 +109,7 @@ export default function AccommodationsPage() {
   }, []);
 
   const formatRupiah = (amount: number) => {
-    return "Rp " + new Intl.NumberFormat("id-ID", {
+    return "Rp" + new Intl.NumberFormat("id-ID", {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
@@ -125,11 +125,11 @@ export default function AccommodationsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Akomodasi</h1>
-          <p className="text-gray-600">Vila, penginapan, dan camping</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Akomodasi</h1>
+          <p className="text-xs sm:text-sm md:text-base text-gray-600">Vila, penginapan, dan camping</p>
         </div>
         <Button 
           onClick={() => {
@@ -147,58 +147,54 @@ export default function AccommodationsPage() {
             });
             setIsDialogOpen(true);
           }}
-          className="bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-lg"
+          size="sm"
+          className="bg-gradient-to-r from-sea-ocean to-sea-teal hover:shadow-lg flex-shrink-0"
         >
-          <Plus className="h-4 w-4 mr-2" />
-          Tambah Akomodasi
+          <Plus className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+          <span className="hidden sm:inline">Tambah</span>
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Semua</CardTitle>
-            <HotelIcon className="h-4 w-4 text-gray-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {accommodations.length}
-            </div>
-          </CardContent>
-        </Card>
-        {Object.entries(typeLabels).map(([type, label]) => (
-          <Card key={type}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{label}</CardTitle>
-              {type === "camping" ? <Tent className="h-4 w-4 text-gray-600" /> : <HotelIcon className="h-4 w-4 text-gray-600" />}
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {accommodations.filter(a => a.type === type).length}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="border rounded-lg overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Semua</th>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Vila</th>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Penginapan</th>
+              <th className="px-3 py-2 text-left font-medium text-gray-600">Camping</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="px-3 py-2 font-bold">{accommodations.length}</td>
+              <td className="px-3 py-2 font-bold">{accommodations.filter(a => a.type === "vila").length}</td>
+              <td className="px-3 py-2 font-bold">{accommodations.filter(a => a.type === "penginapan").length}</td>
+              <td className="px-3 py-2 font-bold">{accommodations.filter(a => a.type === "camping").length}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Daftar Akomodasi</CardTitle>
-          <CardDescription>Semua tempat menginap yang tersedia</CardDescription>
+        <CardHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg">Daftar Akomodasi</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">Semua tempat menginap yang tersedia</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nama</TableHead>
-                <TableHead>Tipe</TableHead>
-                <TableHead>Jarak</TableHead>
-                <TableHead>Harga Mulai</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[150px]">Nama</TableHead>
+                  <TableHead className="min-w-[100px]">Tipe</TableHead>
+                  <TableHead className="min-w-[80px]">Jarak</TableHead>
+                  <TableHead className="min-w-[120px]">Harga Mulai</TableHead>
+                  <TableHead className="min-w-[80px]">Status</TableHead>
+                  <TableHead className="text-right min-w-[100px]">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
               {accommodations.map((acc) => (
                 <TableRow key={acc.id}>
                   <TableCell>
@@ -226,10 +222,7 @@ export default function AccommodationsPage() {
                   </TableCell>
                   <TableCell>
                     {acc.priceFromIdr ? (
-                      <div className="flex items-center gap-1">
-                        <DollarSign className="h-4 w-4 text-gray-400" />
-                        <span className="font-medium">{formatRupiah(acc.priceFromIdr)}</span>
-                      </div>
+                      <div className="font-medium text-sm">{formatRupiah(acc.priceFromIdr)}</div>
                     ) : "-"}
                   </TableCell>
                   <TableCell>
@@ -281,8 +274,9 @@ export default function AccommodationsPage() {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
@@ -295,9 +289,9 @@ export default function AccommodationsPage() {
               {editingAccommodation ? "Update informasi akomodasi" : "Buat akomodasi baru"}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-6 py-4">
             <div>
-              <Label htmlFor="name">Nama *</Label>
+              <Label htmlFor="name" className="mb-2">Nama *</Label>
               <Input
                 id="name"
                 value={formData.name}
@@ -306,7 +300,7 @@ export default function AccommodationsPage() {
               />
             </div>
             <div>
-              <Label htmlFor="type">Tipe *</Label>
+              <Label htmlFor="type" className="mb-2">Tipe *</Label>
               <Select value={formData.type} onValueChange={(value: "vila" | "penginapan" | "camping") => setFormData({ ...formData, type: value })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Pilih tipe" />
@@ -320,7 +314,7 @@ export default function AccommodationsPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="distanceKm">Jarak (km)</Label>
+                <Label htmlFor="distanceKm" className="mb-2">Jarak (km)</Label>
                 <Input
                   id="distanceKm"
                   type="number"
@@ -330,7 +324,7 @@ export default function AccommodationsPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="priceFromIdr">Harga Mulai (IDR)</Label>
+                <Label htmlFor="priceFromIdr" className="mb-2">Harga Mulai (IDR)</Label>
                 <Input
                   id="priceFromIdr"
                   type="number"
@@ -340,7 +334,7 @@ export default function AccommodationsPage() {
               </div>
             </div>
             <div>
-              <Label htmlFor="facilities">Fasilitas (pisahkan dengan koma)</Label>
+              <Label htmlFor="facilities" className="mb-2">Fasilitas (pisahkan dengan koma)</Label>
               <Textarea
                 id="facilities"
                 value={formData.facilities}
@@ -350,7 +344,7 @@ export default function AccommodationsPage() {
               />
             </div>
             <div>
-              <Label htmlFor="contact">Kontak</Label>
+              <Label htmlFor="contact" className="mb-2">Kontak</Label>
               <Input
                 id="contact"
                 value={formData.contact}
@@ -359,7 +353,7 @@ export default function AccommodationsPage() {
               />
             </div>
             <div>
-              <Label htmlFor="rules">Peraturan</Label>
+              <Label htmlFor="rules" className="mb-2">Peraturan</Label>
               <Textarea
                 id="rules"
                 value={formData.rules}
