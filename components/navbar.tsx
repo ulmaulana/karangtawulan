@@ -33,28 +33,47 @@ export function Navbar() {
 
   useEffect(() => {
     const updateIndicator = () => {
-      if (navRef.current && activeIndex >= 0) {
-        const activeLink = navRef.current.children[activeIndex] as HTMLElement;
-        if (activeLink) {
-          // Padding container adalah 0.5rem = 8px (p-2)
-          const containerPadding = 8;
-          setIndicatorStyle({
-            left: activeLink.offsetLeft + containerPadding,
-            width: activeLink.offsetWidth,
-          });
-        }
+      try {
+        if (!navRef.current || activeIndex < 0) return;
+        
+        // Safer DOM access for Safari compatibility
+        const children = Array.from(navRef.current.children);
+        const activeLink = children[activeIndex] as HTMLElement;
+        
+        if (!activeLink || typeof activeLink.offsetLeft === 'undefined') return;
+        
+        // Padding container adalah 0.5rem = 8px (p-2)
+        const containerPadding = 8;
+        setIndicatorStyle({
+          left: activeLink.offsetLeft + containerPadding,
+          width: activeLink.offsetWidth || 0,
+        });
+      } catch (error) {
+        // Silently fail on Safari if DOM is not ready
+        console.warn('Indicator update failed:', error);
       }
     };
 
-    // Update on mount and route change
-    if (mounted) {
-      // Small delay to ensure DOM is fully rendered
-      setTimeout(updateIndicator, 0);
-    }
+    if (!mounted) return;
 
-    // Update on window resize
-    window.addEventListener('resize', updateIndicator);
-    return () => window.removeEventListener('resize', updateIndicator);
+    // Initial update with delay for Safari
+    const timeoutId = setTimeout(updateIndicator, 100);
+
+    // Update on window resize with debounce
+    let resizeTimeout: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(updateIndicator, 100);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup
+    return () => {
+      clearTimeout(timeoutId);
+      clearTimeout(resizeTimeout);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [activeIndex, mounted]);
 
   return (

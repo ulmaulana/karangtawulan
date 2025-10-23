@@ -44,11 +44,11 @@ export function AdminSidebar() {
 
   return (
     <>
-      {/* Mobile Menu Button */}
+      {/* Mobile Menu Button - Integrated with sidebar */}
       <Button
         variant="outline"
         size="icon"
-        className="fixed top-4 left-4 z-50 md:hidden bg-gradient-to-r from-sea-ocean to-sea-teal backdrop-blur-md border-sea-ocean/30 text-white hover:shadow-xl transition-all duration-300"
+        className="fixed top-4 left-4 z-50 md:hidden bg-white border-sea-ocean/20 text-sea-ocean hover:bg-sea-ocean hover:text-white shadow-md hover:shadow-xl transition-all duration-300"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
       >
         {isMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -57,10 +57,10 @@ export function AdminSidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-40 h-screen w-64 transition-transform",
-          "bg-white/95",
+          "fixed top-0 left-0 z-40 h-screen w-64 transition-transform duration-300",
+          "bg-white/98",
           "backdrop-blur-xl border-r border-sea-foam/50",
-          "shadow-2xl",
+          "shadow-xl",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
