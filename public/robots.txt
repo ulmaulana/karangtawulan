@@ -1,0 +1,10 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /dashboard/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://karangtawulan.vercel.app/sitemap.xml
