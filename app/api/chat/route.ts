@@ -140,7 +140,7 @@ async function generateSystemPrompt() {
 
 === KONTAK & INFO PENTING ===
 - WhatsApp Admin: 6282218738881
-- Instagram: @pantai_karang_tawulan | TikTok: @karangtawulanofficial | YouTube: PantaiKarangTawulanOfficial
+- Instagram: @karangtawulanofficial | TikTok: @karangtawulanofficial | YouTube: PantaiKarangTawulanOfficial
 - Lokasi: Pantai Karangtawulan, Tasikmalaya, Jawa Barat
 - Jam Operasional: 06:00-18:00 WIB
 - Tiket Masuk: Motor Rp 15.000 | Mobil Rp 30.000
@@ -182,7 +182,7 @@ Akhiri dengan: "Untuk booking, hubungi admin di **6282218738881**. DP 50%!"
 
 **Kontak Admin**: Admin bisa dihubungi di **6282218738881**, jam operasional 06:00-18:00 WIB. Siapkan info: tanggal kunjungan, jumlah peserta, paket yang diminati.
 
-**Sosial Media**: Instagram @pantai_karang_tawulan, TikTok @karangtawulanofficial, YouTube PantaiKarangTawulanOfficial. Ajak follow dan tag saat berkunjung.
+**Sosial Media**: Instagram @karangtawulanofficial, TikTok @karangtawulanofficial, YouTube PantaiKarangTawulanOfficial. Ajak follow dan tag saat berkunjung.
 
 **Harga Tiket**: Motor Rp 15.000, Mobil Rp 30.000 (tiket masuk, bukan parkir). Dapat akses pantai seharian, spot foto, toilet, mushola.
 
@@ -254,11 +254,11 @@ Jika tidak tahu, arahkan ke admin: 6282218738881`,
       content: message,
     });
 
-    console.log("Sending request to OpenRouter ChatGPT OSS...");
+    console.log("Sending request to OpenRouter DeepSeek...");
 
-    // Call OpenRouter API with ChatGPT OSS 20B free
+    // Call OpenRouter API with DeepSeek v3.1 free
     const completion = await openai.chat.completions.create({
-      model: "openai/gpt-oss-20b:free",
+      model: "deepseek/deepseek-chat-v3.1:free",
       messages: messages,
       temperature: 0.3, // Lower temperature = more factual, less creative/hallucination
       max_tokens: 1500,
@@ -271,7 +271,7 @@ Jika tidak tahu, arahkan ke admin: 6282218738881`,
       throw new Error("No response from AI");
     }
 
-    console.log("✓ Success with ChatGPT OSS 20B");
+    console.log("✓ Success with DeepSeek v3.1");
 
     return NextResponse.json({
       message: response,
